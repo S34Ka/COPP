@@ -3099,3 +3099,2412 @@ FUNCTIONS
         Point(x=11, y=22)
         >>> p._replace(x=100)               # _replace() is like str.replace() but targets named fields
         Point(x=100, y=22)
+
+[operator]
+DESCRIPTION
+    This module exports a set of functions implemented in C corresponding
+    to the intrinsic operators of Python.  For example, operator.add(x, y)
+    is equivalent to the expression x+y.  The function names are those
+    used for special methods; variants without leading and trailing
+    '__' are also provided for convenience.
+
+CLASSES
+    __builtin__.object
+        attrgetter
+        itemgetter
+        methodcaller
+    
+    class attrgetter(__builtin__.object)
+     |  attrgetter(attr, ...) --> attrgetter object
+     |  
+     |  Return a callable object that fetches the given attribute(s) from its operand.
+     |  After f = attrgetter('name'), the call f(r) returns r.name.
+     |  After g = attrgetter('name', 'date'), the call g(r) returns (r.name, r.date).
+     |  After h = attrgetter('name.first', 'name.last'), the call h(r) returns
+     |  (r.name.first, r.name.last).
+     |  
+     |  Methods defined here:
+     |  
+     |  __call__(...)
+     |      x.__call__(...) <==> x(...)
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+    
+    class itemgetter(__builtin__.object)
+     |  itemgetter(item, ...) --> itemgetter object
+     |  
+     |  Return a callable object that fetches the given item(s) from its operand.
+     |  After f = itemgetter(2), the call f(r) returns r[2].
+     |  After g = itemgetter(2, 5, 3), the call g(r) returns (r[2], r[5], r[3])
+     |  
+     |  Methods defined here:
+     |  
+     |  __call__(...)
+     |      x.__call__(...) <==> x(...)
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+    
+    class methodcaller(__builtin__.object)
+     |  methodcaller(name, ...) --> methodcaller object
+     |  
+     |  Return a callable object that calls the given method on its operand.
+     |  After f = methodcaller('name'), the call f(r) returns r.name().
+     |  After g = methodcaller('name', 'date', foo=1), the call g(r) returns
+     |  r.name('date', foo=1).
+     |  
+     |  Methods defined here:
+     |  
+     |  __call__(...)
+     |      x.__call__(...) <==> x(...)
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+
+FUNCTIONS
+    __abs__(...)
+        abs(a) -- Same as abs(a).
+    
+    __add__(...)
+        add(a, b) -- Same as a + b.
+    
+    __and__(...)
+        and_(a, b) -- Same as a & b.
+    
+    __concat__(...)
+        concat(a, b) -- Same as a + b, for a and b sequences.
+    
+    __contains__(...)
+        contains(a, b) -- Same as b in a (note reversed operands).
+    
+    __delitem__(...)
+        delitem(a, b) -- Same as del a[b].
+    
+    __delslice__(...)
+        delslice(a, b, c) -- Same as del a[b:c].
+    
+    __div__(...)
+        div(a, b) -- Same as a / b when __future__.division is not in effect.
+    
+    __eq__(...)
+        eq(a, b) -- Same as a==b.
+    
+    __floordiv__(...)
+        floordiv(a, b) -- Same as a // b.
+    
+    __ge__(...)
+        ge(a, b) -- Same as a>=b.
+    
+    __getitem__(...)
+        getitem(a, b) -- Same as a[b].
+    
+    __getslice__(...)
+        getslice(a, b, c) -- Same as a[b:c].
+    
+    __gt__(...)
+        gt(a, b) -- Same as a>b.
+    
+    __iadd__(...)
+        a = iadd(a, b) -- Same as a += b.
+    
+    __iand__(...)
+        a = iand(a, b) -- Same as a &= b.
+    
+    __iconcat__(...)
+        a = iconcat(a, b) -- Same as a += b, for a and b sequences.
+    
+    __idiv__(...)
+        a = idiv(a, b) -- Same as a /= b when __future__.division is not in effect.
+    
+    __ifloordiv__(...)
+        a = ifloordiv(a, b) -- Same as a //= b.
+    
+    __ilshift__(...)
+        a = ilshift(a, b) -- Same as a <<= b.
+    
+    __imod__(...)
+        a = imod(a, b) -- Same as a %= b.
+    
+    __imul__(...)
+        a = imul(a, b) -- Same as a *= b.
+    
+    __index__(...)
+        index(a) -- Same as a.__index__()
+    
+    __inv__(...)
+        inv(a) -- Same as ~a.
+    
+    __invert__(...)
+        invert(a) -- Same as ~a.
+    
+    __ior__(...)
+        a = ior(a, b) -- Same as a |= b.
+    
+    __ipow__(...)
+        a = ipow(a, b) -- Same as a **= b.
+    
+    __irepeat__(...)
+        a = irepeat(a, b) -- Same as a *= b, where a is a sequence, and b is an integer.
+    
+    __irshift__(...)
+        a = irshift(a, b) -- Same as a >>= b.
+    
+    __isub__(...)
+        a = isub(a, b) -- Same as a -= b.
+    
+    __itruediv__(...)
+        a = itruediv(a, b) -- Same as a /= b when __future__.division is in effect.
+    
+    __ixor__(...)
+        a = ixor(a, b) -- Same as a ^= b.
+    
+    __le__(...)
+        le(a, b) -- Same as a<=b.
+    
+    __lshift__(...)
+        lshift(a, b) -- Same as a << b.
+    
+    __lt__(...)
+        lt(a, b) -- Same as a<b.
+    
+    __mod__(...)
+        mod(a, b) -- Same as a % b.
+    
+    __mul__(...)
+        mul(a, b) -- Same as a * b.
+    
+    __ne__(...)
+        ne(a, b) -- Same as a!=b.
+    
+    __neg__(...)
+        neg(a) -- Same as -a.
+    
+    __not__(...)
+        not_(a) -- Same as not a.
+    
+    __or__(...)
+        or_(a, b) -- Same as a | b.
+    
+    __pos__(...)
+        pos(a) -- Same as +a.
+    
+    __pow__(...)
+        pow(a, b) -- Same as a ** b.
+    
+    __repeat__(...)
+        repeat(a, b) -- Return a * b, where a is a sequence, and b is an integer.
+    
+    __rshift__(...)
+        rshift(a, b) -- Same as a >> b.
+    
+    __setitem__(...)
+        setitem(a, b, c) -- Same as a[b] = c.
+    
+    __setslice__(...)
+        setslice(a, b, c, d) -- Same as a[b:c] = d.
+    
+    __sub__(...)
+        sub(a, b) -- Same as a - b.
+    
+    __truediv__(...)
+        truediv(a, b) -- Same as a / b when __future__.division is in effect.
+    
+    __xor__(...)
+        xor(a, b) -- Same as a ^ b.
+    
+    abs(...)
+        abs(a) -- Same as abs(a).
+    
+    add(...)
+        add(a, b) -- Same as a + b.
+    
+    and_(...)
+        and_(a, b) -- Same as a & b.
+    
+    concat(...)
+        concat(a, b) -- Same as a + b, for a and b sequences.
+    
+    contains(...)
+        contains(a, b) -- Same as b in a (note reversed operands).
+    
+    countOf(...)
+        countOf(a, b) -- Return the number of times b occurs in a.
+    
+    delitem(...)
+        delitem(a, b) -- Same as del a[b].
+    
+    delslice(...)
+        delslice(a, b, c) -- Same as del a[b:c].
+    
+    div(...)
+        div(a, b) -- Same as a / b when __future__.division is not in effect.
+    
+    eq(...)
+        eq(a, b) -- Same as a==b.
+    
+    floordiv(...)
+        floordiv(a, b) -- Same as a // b.
+    
+    ge(...)
+        ge(a, b) -- Same as a>=b.
+    
+    getitem(...)
+        getitem(a, b) -- Same as a[b].
+    
+    getslice(...)
+        getslice(a, b, c) -- Same as a[b:c].
+    
+    gt(...)
+        gt(a, b) -- Same as a>b.
+    
+    iadd(...)
+        a = iadd(a, b) -- Same as a += b.
+    
+    iand(...)
+        a = iand(a, b) -- Same as a &= b.
+    
+    iconcat(...)
+        a = iconcat(a, b) -- Same as a += b, for a and b sequences.
+    
+    idiv(...)
+        a = idiv(a, b) -- Same as a /= b when __future__.division is not in effect.
+    
+    ifloordiv(...)
+        a = ifloordiv(a, b) -- Same as a //= b.
+    
+    ilshift(...)
+        a = ilshift(a, b) -- Same as a <<= b.
+    
+    imod(...)
+        a = imod(a, b) -- Same as a %= b.
+    
+    imul(...)
+        a = imul(a, b) -- Same as a *= b.
+    
+    index(...)
+        index(a) -- Same as a.__index__()
+    
+    indexOf(...)
+        indexOf(a, b) -- Return the first index of b in a.
+    
+    inv(...)
+        inv(a) -- Same as ~a.
+    
+    invert(...)
+        invert(a) -- Same as ~a.
+    
+    ior(...)
+        a = ior(a, b) -- Same as a |= b.
+    
+    ipow(...)
+        a = ipow(a, b) -- Same as a **= b.
+    
+    irepeat(...)
+        a = irepeat(a, b) -- Same as a *= b, where a is a sequence, and b is an integer.
+    
+    irshift(...)
+        a = irshift(a, b) -- Same as a >>= b.
+    
+    isCallable(...)
+        isCallable(a) -- Same as callable(a).
+    
+    isMappingType(...)
+        isMappingType(a) -- Return True if a has a mapping type, False otherwise.
+    
+    isNumberType(...)
+        isNumberType(a) -- Return True if a has a numeric type, False otherwise.
+    
+    isSequenceType(...)
+        isSequenceType(a) -- Return True if a has a sequence type, False otherwise.
+    
+    is_(...)
+        is_(a, b) -- Same as a is b.
+    
+    is_not(...)
+        is_not(a, b) -- Same as a is not b.
+    
+    isub(...)
+        a = isub(a, b) -- Same as a -= b.
+    
+    itruediv(...)
+        a = itruediv(a, b) -- Same as a /= b when __future__.division is in effect.
+    
+    ixor(...)
+        a = ixor(a, b) -- Same as a ^= b.
+    
+    le(...)
+        le(a, b) -- Same as a<=b.
+    
+    lshift(...)
+        lshift(a, b) -- Same as a << b.
+    
+    lt(...)
+        lt(a, b) -- Same as a<b.
+    
+    mod(...)
+        mod(a, b) -- Same as a % b.
+    
+    mul(...)
+        mul(a, b) -- Same as a * b.
+    
+    ne(...)
+        ne(a, b) -- Same as a!=b.
+    
+    neg(...)
+        neg(a) -- Same as -a.
+    
+    not_(...)
+        not_(a) -- Same as not a.
+    
+    or_(...)
+        or_(a, b) -- Same as a | b.
+    
+    pos(...)
+        pos(a) -- Same as +a.
+    
+    pow(...)
+        pow(a, b) -- Same as a ** b.
+    
+    repeat(...)
+        repeat(a, b) -- Return a * b, where a is a sequence, and b is an integer.
+    
+    rshift(...)
+        rshift(a, b) -- Same as a >> b.
+    
+    sequenceIncludes(...)
+        sequenceIncludes(a, b) -- Same as b in a (note reversed operands; deprecated).
+    
+    setitem(...)
+        setitem(a, b, c) -- Same as a[b] = c.
+    
+    setslice(...)
+        setslice(a, b, c, d) -- Same as a[b:c] = d.
+    
+    sub(...)
+        sub(a, b) -- Same as a - b.
+    
+    truediv(...)
+        truediv(a, b) -- Same as a / b when __future__.division is in effect.
+    
+    truth(...)
+        truth(a) -- Return True if a is true, False otherwise.
+    
+    xor(...)
+        xor(a, b) -- Same as a ^ b.
+
+[io]
+DESCRIPTION
+    The io module provides the Python interfaces to stream handling. The
+    builtin open function is defined in this module.
+    
+    At the top of the I/O hierarchy is the abstract base class IOBase. It
+    defines the basic interface to a stream. Note, however, that there is no
+    separation between reading and writing to streams; implementations are
+    allowed to raise an IOError if they do not support a given operation.
+    
+    Extending IOBase is RawIOBase which deals simply with the reading and
+    writing of raw bytes to a stream. FileIO subclasses RawIOBase to provide
+    an interface to OS files.
+    
+    BufferedIOBase deals with buffering on a raw byte stream (RawIOBase). Its
+    subclasses, BufferedWriter, BufferedReader, and BufferedRWPair buffer
+    streams that are readable, writable, and both respectively.
+    BufferedRandom provides a buffered interface to random access
+    streams. BytesIO is a simple stream of in-memory bytes.
+    
+    Another IOBase subclass, TextIOBase, deals with the encoding and decoding
+    of streams into text. TextIOWrapper, which extends it, is a buffered text
+    interface to a buffered raw stream (`BufferedIOBase`). Finally, StringIO
+    is an in-memory stream for text.
+    
+    Argument names are not part of the specification, and only the arguments
+    of open() are intended to be used as keyword arguments.
+    
+    data:
+    
+    DEFAULT_BUFFER_SIZE
+    
+       An int containing the default buffer size used by the module's buffered
+       I/O classes. open() uses the file's blksize (as obtained by os.stat) if
+       possible.
+
+CLASSES
+    _io._BufferedIOBase(_io._IOBase)
+        _io.BufferedRWPair
+        _io.BufferedRandom
+        _io.BufferedReader
+        _io.BufferedWriter
+        _io.BytesIO
+        BufferedIOBase(_io._BufferedIOBase, IOBase)
+    _io._IOBase(__builtin__.object)
+        IOBase
+            BufferedIOBase(_io._BufferedIOBase, IOBase)
+            RawIOBase(_io._RawIOBase, IOBase)
+            TextIOBase(_io._TextIOBase, IOBase)
+    _io._RawIOBase(_io._IOBase)
+        _io.FileIO
+        RawIOBase(_io._RawIOBase, IOBase)
+    _io._TextIOBase(_io._IOBase)
+        _io.StringIO
+        _io.TextIOWrapper
+        TextIOBase(_io._TextIOBase, IOBase)
+    exceptions.IOError(exceptions.EnvironmentError)
+        __builtin__.BlockingIOError
+        UnsupportedOperation(exceptions.ValueError, exceptions.IOError)
+    exceptions.ValueError(exceptions.StandardError)
+        UnsupportedOperation(exceptions.ValueError, exceptions.IOError)
+    
+    class BlockingIOError(exceptions.IOError)
+     |  Exception raised when I/O would block on a non-blocking I/O stream
+     |  
+     |  Method resolution order:
+     |      BlockingIOError
+     |      exceptions.IOError
+     |      exceptions.EnvironmentError
+     |      exceptions.StandardError
+     |      exceptions.Exception
+     |      exceptions.BaseException
+     |      object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  characters_written
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from exceptions.IOError:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from exceptions.EnvironmentError:
+     |  
+     |  __reduce__(...)
+     |  
+     |  __str__(...)
+     |      x.__str__() <==> str(x)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from exceptions.EnvironmentError:
+     |  
+     |  errno
+     |      exception errno
+     |  
+     |  filename
+     |      exception filename
+     |  
+     |  strerror
+     |      exception strerror
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from exceptions.BaseException:
+     |  
+     |  __delattr__(...)
+     |      x.__delattr__('name') <==> del x.name
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __getslice__(...)
+     |      x.__getslice__(i, j) <==> x[i:j]
+     |      
+     |      Use of negative indices is not supported.
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __setattr__(...)
+     |      x.__setattr__('name', value) <==> x.name = value
+     |  
+     |  __setstate__(...)
+     |  
+     |  __unicode__(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from exceptions.BaseException:
+     |  
+     |  __dict__
+     |  
+     |  args
+     |  
+     |  message
+    
+    class BufferedIOBase(_io._BufferedIOBase, IOBase)
+     |  Base class for buffered IO objects.
+     |  
+     |  The main difference with RawIOBase is that the read() method
+     |  supports omitting the size argument, and does not have a default
+     |  implementation that defers to readinto().
+     |  
+     |  In addition, read(), readinto() and write() may raise
+     |  BlockingIOError if the underlying raw stream is in non-blocking
+     |  mode and not ready; unlike their raw counterparts, they will never
+     |  return None.
+     |  
+     |  A typical implementation should not inherit from a RawIOBase
+     |  implementation, but wrap one.
+     |  
+     |  Method resolution order:
+     |      BufferedIOBase
+     |      _io._BufferedIOBase
+     |      IOBase
+     |      _io._IOBase
+     |      __builtin__.object
+     |  
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset([])
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _io._BufferedIOBase:
+     |  
+     |  detach(...)
+     |      Disconnect this buffer from its underlying raw stream and return it.
+     |      
+     |      After the raw stream has been detached, the buffer is in an unusable
+     |      state.
+     |  
+     |  read(...)
+     |      Read and return up to n bytes.
+     |      
+     |      If the argument is omitted, None, or negative, reads and
+     |      returns all data until EOF.
+     |      
+     |      If the argument is positive, and the underlying raw stream is
+     |      not 'interactive', multiple raw reads may be issued to satisfy
+     |      the byte count (unless EOF is reached first).  But for
+     |      interactive raw streams (as well as sockets and pipes), at most
+     |      one raw read will be issued, and a short result does not imply
+     |      that EOF is imminent.
+     |      
+     |      Returns an empty bytes object on EOF.
+     |      
+     |      Returns None if the underlying raw stream was open in non-blocking
+     |      mode and no data is available at the moment.
+     |  
+     |  read1(...)
+     |      Read and return up to n bytes, with at most one read() call
+     |      to the underlying raw stream. A short result does not imply
+     |      that EOF is imminent.
+     |      
+     |      Returns an empty bytes object on EOF.
+     |  
+     |  readinto(...)
+     |  
+     |  write(...)
+     |      Write the given buffer to the IO stream.
+     |      
+     |      Returns the number of bytes written, which is always len(b).
+     |      
+     |      Raises BlockingIOError if the buffer is full and the
+     |      underlying raw stream cannot accept more data at the moment.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from IOBase:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _io._IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  close(...)
+     |      Flush and close the IO object.
+     |      
+     |      This method has no effect if the file is already closed.
+     |  
+     |  fileno(...)
+     |      Returns underlying file descriptor if one exists.
+     |      
+     |      An IOError is raised if the IO object does not use a file descriptor.
+     |  
+     |  flush(...)
+     |      Flush write buffers, if applicable.
+     |      
+     |      This is not implemented for read-only and non-blocking streams.
+     |  
+     |  isatty(...)
+     |      Return whether this is an 'interactive' stream.
+     |      
+     |      Return False if it can't be determined.
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  readable(...)
+     |      Return whether object was opened for reading.
+     |      
+     |      If False, read() will raise IOError.
+     |  
+     |  readline(...)
+     |      Read and return a line from the stream.
+     |      
+     |      If limit is specified, at most limit bytes will be read.
+     |      
+     |      The line terminator is always b'\n' for binary files; for text
+     |      files, the newlines argument to open can be used to select the line
+     |      terminator(s) recognized.
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  seek(...)
+     |      Change stream position.
+     |      
+     |      Change the stream position to the given byte offset. The offset is
+     |      interpreted relative to the position indicated by whence.  Values
+     |      for whence are:
+     |      
+     |      * 0 -- start of stream (the default); offset should be zero or positive
+     |      * 1 -- current stream position; offset may be negative
+     |      * 2 -- end of stream; offset is usually negative
+     |      
+     |      Return the new absolute position.
+     |  
+     |  seekable(...)
+     |      Return whether object supports random access.
+     |      
+     |      If False, seek(), tell() and truncate() will raise IOError.
+     |      This method may need to do a test seek().
+     |  
+     |  tell(...)
+     |      Return current stream position.
+     |  
+     |  truncate(...)
+     |      Truncate file to size bytes.
+     |      
+     |      File pointer is left unchanged.  Size defaults to the current IO
+     |      position as reported by tell().  Returns the new size.
+     |  
+     |  writable(...)
+     |      Return whether object was opened for writing.
+     |      
+     |      If False, read() will raise IOError.
+     |  
+     |  writelines(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from _io._IOBase:
+     |  
+     |  closed
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from _io._IOBase:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+    
+    class BufferedRWPair(_BufferedIOBase)
+     |  A buffered reader and writer object together.
+     |  
+     |  A buffered reader object and buffered writer object put together to
+     |  form a sequential IO object that can read and write. This is typically
+     |  used with a socket or two-way pipe.
+     |  
+     |  reader and writer are RawIOBase objects that are readable and
+     |  writeable respectively. If the buffer_size is omitted it defaults to
+     |  DEFAULT_BUFFER_SIZE.
+     |  
+     |  Method resolution order:
+     |      BufferedRWPair
+     |      _BufferedIOBase
+     |      _IOBase
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  close(...)
+     |  
+     |  flush(...)
+     |  
+     |  isatty(...)
+     |  
+     |  peek(...)
+     |  
+     |  read(...)
+     |  
+     |  read1(...)
+     |  
+     |  readable(...)
+     |  
+     |  readinto(...)
+     |  
+     |  writable(...)
+     |  
+     |  write(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  closed
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _BufferedIOBase:
+     |  
+     |  detach(...)
+     |      Disconnect this buffer from its underlying raw stream and return it.
+     |      
+     |      After the raw stream has been detached, the buffer is in an unusable
+     |      state.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  fileno(...)
+     |      Returns underlying file descriptor if one exists.
+     |      
+     |      An IOError is raised if the IO object does not use a file descriptor.
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  readline(...)
+     |      Read and return a line from the stream.
+     |      
+     |      If limit is specified, at most limit bytes will be read.
+     |      
+     |      The line terminator is always b'\n' for binary files; for text
+     |      files, the newlines argument to open can be used to select the line
+     |      terminator(s) recognized.
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  seek(...)
+     |      Change stream position.
+     |      
+     |      Change the stream position to the given byte offset. The offset is
+     |      interpreted relative to the position indicated by whence.  Values
+     |      for whence are:
+     |      
+     |      * 0 -- start of stream (the default); offset should be zero or positive
+     |      * 1 -- current stream position; offset may be negative
+     |      * 2 -- end of stream; offset is usually negative
+     |      
+     |      Return the new absolute position.
+     |  
+     |  seekable(...)
+     |      Return whether object supports random access.
+     |      
+     |      If False, seek(), tell() and truncate() will raise IOError.
+     |      This method may need to do a test seek().
+     |  
+     |  tell(...)
+     |      Return current stream position.
+     |  
+     |  truncate(...)
+     |      Truncate file to size bytes.
+     |      
+     |      File pointer is left unchanged.  Size defaults to the current IO
+     |      position as reported by tell().  Returns the new size.
+     |  
+     |  writelines(...)
+    
+    class BufferedRandom(_BufferedIOBase)
+     |  A buffered interface to random access streams.
+     |  
+     |  The constructor creates a reader and writer for a seekable stream,
+     |  raw, given in the first argument. If the buffer_size is omitted it
+     |  defaults to DEFAULT_BUFFER_SIZE. max_buffer_size isn't used anymore.
+     |  
+     |  Method resolution order:
+     |      BufferedRandom
+     |      _BufferedIOBase
+     |      _IOBase
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __sizeof__(...)
+     |  
+     |  close(...)
+     |  
+     |  detach(...)
+     |  
+     |  fileno(...)
+     |  
+     |  flush(...)
+     |  
+     |  isatty(...)
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  peek(...)
+     |  
+     |  read(...)
+     |  
+     |  read1(...)
+     |  
+     |  readable(...)
+     |  
+     |  readinto(...)
+     |  
+     |  readline(...)
+     |  
+     |  seek(...)
+     |  
+     |  seekable(...)
+     |  
+     |  tell(...)
+     |  
+     |  truncate(...)
+     |  
+     |  writable(...)
+     |  
+     |  write(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  closed
+     |  
+     |  mode
+     |  
+     |  name
+     |  
+     |  raw
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  writelines(...)
+    
+    class BufferedReader(_BufferedIOBase)
+     |  Create a new buffered reader using the given readable raw IO object.
+     |  
+     |  Method resolution order:
+     |      BufferedReader
+     |      _BufferedIOBase
+     |      _IOBase
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __sizeof__(...)
+     |  
+     |  close(...)
+     |  
+     |  detach(...)
+     |  
+     |  fileno(...)
+     |  
+     |  flush(...)
+     |  
+     |  isatty(...)
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  peek(...)
+     |  
+     |  read(...)
+     |  
+     |  read1(...)
+     |  
+     |  readable(...)
+     |  
+     |  readline(...)
+     |  
+     |  seek(...)
+     |  
+     |  seekable(...)
+     |  
+     |  tell(...)
+     |  
+     |  truncate(...)
+     |  
+     |  writable(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  closed
+     |  
+     |  mode
+     |  
+     |  name
+     |  
+     |  raw
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _BufferedIOBase:
+     |  
+     |  readinto(...)
+     |  
+     |  write(...)
+     |      Write the given buffer to the IO stream.
+     |      
+     |      Returns the number of bytes written, which is always len(b).
+     |      
+     |      Raises BlockingIOError if the buffer is full and the
+     |      underlying raw stream cannot accept more data at the moment.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  writelines(...)
+    
+    class BufferedWriter(_BufferedIOBase)
+     |  A buffer for a writeable sequential RawIO object.
+     |  
+     |  The constructor creates a BufferedWriter for the given writeable raw
+     |  stream. If the buffer_size is not given, it defaults to
+     |  DEFAULT_BUFFER_SIZE. max_buffer_size isn't used anymore.
+     |  
+     |  Method resolution order:
+     |      BufferedWriter
+     |      _BufferedIOBase
+     |      _IOBase
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __sizeof__(...)
+     |  
+     |  close(...)
+     |  
+     |  detach(...)
+     |  
+     |  fileno(...)
+     |  
+     |  flush(...)
+     |  
+     |  isatty(...)
+     |  
+     |  readable(...)
+     |  
+     |  seek(...)
+     |  
+     |  seekable(...)
+     |  
+     |  tell(...)
+     |  
+     |  truncate(...)
+     |  
+     |  writable(...)
+     |  
+     |  write(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  closed
+     |  
+     |  mode
+     |  
+     |  name
+     |  
+     |  raw
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _BufferedIOBase:
+     |  
+     |  read(...)
+     |      Read and return up to n bytes.
+     |      
+     |      If the argument is omitted, None, or negative, reads and
+     |      returns all data until EOF.
+     |      
+     |      If the argument is positive, and the underlying raw stream is
+     |      not 'interactive', multiple raw reads may be issued to satisfy
+     |      the byte count (unless EOF is reached first).  But for
+     |      interactive raw streams (as well as sockets and pipes), at most
+     |      one raw read will be issued, and a short result does not imply
+     |      that EOF is imminent.
+     |      
+     |      Returns an empty bytes object on EOF.
+     |      
+     |      Returns None if the underlying raw stream was open in non-blocking
+     |      mode and no data is available at the moment.
+     |  
+     |  read1(...)
+     |      Read and return up to n bytes, with at most one read() call
+     |      to the underlying raw stream. A short result does not imply
+     |      that EOF is imminent.
+     |      
+     |      Returns an empty bytes object on EOF.
+     |  
+     |  readinto(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  readline(...)
+     |      Read and return a line from the stream.
+     |      
+     |      If limit is specified, at most limit bytes will be read.
+     |      
+     |      The line terminator is always b'\n' for binary files; for text
+     |      files, the newlines argument to open can be used to select the line
+     |      terminator(s) recognized.
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  writelines(...)
+    
+    class BytesIO(_BufferedIOBase)
+     |  BytesIO([buffer]) -> object
+     |  
+     |  Create a buffered I/O implementation using an in-memory bytes
+     |  buffer, ready for reading and writing.
+     |  
+     |  Method resolution order:
+     |      BytesIO
+     |      _BufferedIOBase
+     |      _IOBase
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __getstate__(...)
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  __setstate__(...)
+     |  
+     |  __sizeof__(...)
+     |  
+     |  close(...)
+     |      close() -> None.  Disable all I/O operations.
+     |  
+     |  flush(...)
+     |      flush() -> None.  Does nothing.
+     |  
+     |  getvalue(...)
+     |      getvalue() -> bytes.
+     |      
+     |      Retrieve the entire contents of the BytesIO object.
+     |  
+     |  isatty(...)
+     |      isatty() -> False.
+     |      
+     |      Always returns False since BytesIO objects are not connected
+     |      to a tty-like device.
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  read(...)
+     |      read([size]) -> read at most size bytes, returned as a string.
+     |      
+     |      If the size argument is negative, read until EOF is reached.
+     |      Return an empty string at EOF.
+     |  
+     |  read1(...)
+     |      read1(size) -> read at most size bytes, returned as a string.
+     |      
+     |      If the size argument is negative or omitted, read until EOF is reached.
+     |      Return an empty string at EOF.
+     |  
+     |  readable(...)
+     |      readable() -> bool. Returns True if the IO object can be read.
+     |  
+     |  readinto(...)
+     |      readinto(b) -> int.  Read up to len(b) bytes into b.
+     |      
+     |      Returns number of bytes read (0 for EOF), or None if the object
+     |      is set not to block and has no data to read.
+     |  
+     |  readline(...)
+     |      readline([size]) -> next line from the file, as a string.
+     |      
+     |      Retain newline.  A non-negative size argument limits the maximum
+     |      number of bytes to return (an incomplete line may be returned then).
+     |      Return an empty string at EOF.
+     |  
+     |  readlines(...)
+     |      readlines([size]) -> list of strings, each a line from the file.
+     |      
+     |      Call readline() repeatedly and return a list of the lines so read.
+     |      The optional size argument, if given, is an approximate bound on the
+     |      total number of bytes in the lines returned.
+     |  
+     |  seek(...)
+     |      seek(pos[, whence]) -> int.  Change stream position.
+     |      
+     |      Seek to byte offset pos relative to position indicated by whence:
+     |           0  Start of stream (the default).  pos should be >= 0;
+     |           1  Current position - pos may be negative;
+     |           2  End of stream - pos usually negative.
+     |      Returns the new absolute position.
+     |  
+     |  seekable(...)
+     |      seekable() -> bool. Returns True if the IO object can be seeked.
+     |  
+     |  tell(...)
+     |      tell() -> current file position, an integer
+     |  
+     |  truncate(...)
+     |      truncate([size]) -> int.  Truncate the file to at most size bytes.
+     |      
+     |      Size defaults to the current file position, as returned by tell().
+     |      The current file position is unchanged.  Returns the new size.
+     |  
+     |  writable(...)
+     |      writable() -> bool. Returns True if the IO object can be written.
+     |  
+     |  write(...)
+     |      write(bytes) -> int.  Write bytes to file.
+     |      
+     |      Return the number of bytes written.
+     |  
+     |  writelines(...)
+     |      writelines(sequence_of_strings) -> None.  Write strings to the file.
+     |      
+     |      Note that newlines are not added.  The sequence can be any iterable
+     |      object producing strings. This is equivalent to calling write() for
+     |      each string.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  closed
+     |      True if the file is closed.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _BufferedIOBase:
+     |  
+     |  detach(...)
+     |      Disconnect this buffer from its underlying raw stream and return it.
+     |      
+     |      After the raw stream has been detached, the buffer is in an unusable
+     |      state.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  fileno(...)
+     |      Returns underlying file descriptor if one exists.
+     |      
+     |      An IOError is raised if the IO object does not use a file descriptor.
+    
+    class FileIO(_RawIOBase)
+     |  file(name: str[, mode: str]) -> file IO object
+     |  
+     |  Open a file.  The mode can be 'r' (default), 'w' or 'a' for reading,
+     |  writing or appending.  The file will be created if it doesn't exist
+     |  when opened for writing or appending; it will be truncated when
+     |  opened for writing.  Add a '+' to the mode to allow simultaneous
+     |  reading and writing.
+     |  
+     |  Method resolution order:
+     |      FileIO
+     |      _RawIOBase
+     |      _IOBase
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  close(...)
+     |      close() -> None.  Close the file.
+     |      
+     |      A closed file cannot be used for further I/O operations.  close() may be
+     |      called more than once without error.
+     |  
+     |  fileno(...)
+     |      fileno() -> int.  Return the underlying file descriptor (an integer).
+     |  
+     |  isatty(...)
+     |      isatty() -> bool.  True if the file is connected to a TTY device.
+     |  
+     |  read(...)
+     |      read(size: int) -> bytes.  read at most size bytes, returned as bytes.
+     |      
+     |      Only makes one system call, so less data may be returned than requested
+     |      In non-blocking mode, returns None if no data is available.
+     |      On end-of-file, returns ''.
+     |  
+     |  readable(...)
+     |      readable() -> bool.  True if file was opened in a read mode.
+     |  
+     |  readall(...)
+     |      readall() -> bytes.  read all data from the file, returned as bytes.
+     |      
+     |      In non-blocking mode, returns as much as is immediately available,
+     |      or None if no data is available.  On end-of-file, returns ''.
+     |  
+     |  readinto(...)
+     |      readinto() -> Same as RawIOBase.readinto().
+     |  
+     |  seek(...)
+     |      seek(offset: int[, whence: int]) -> int.  Move to new file position
+     |      and return the file position.
+     |      
+     |      Argument offset is a byte count.  Optional argument whence defaults to
+     |      SEEK_SET or 0 (offset from start of file, offset should be >= 0); other values
+     |      are SEEK_CUR or 1 (move relative to current position, positive or negative),
+     |      and SEEK_END or 2 (move relative to end of file, usually negative, although
+     |      many platforms allow seeking beyond the end of a file).
+     |      
+     |      Note that not all file objects are seekable.
+     |  
+     |  seekable(...)
+     |      seekable() -> bool.  True if file supports random-access.
+     |  
+     |  tell(...)
+     |      tell() -> int.  Current file position.
+     |      
+     |      Can raise OSError for non seekable files.
+     |  
+     |  truncate(...)
+     |      truncate([size: int]) -> int.  Truncate the file to at most size bytes and
+     |      return the truncated size.
+     |      
+     |      Size defaults to the current file position, as returned by tell().
+     |      The current file position is changed to the value of size.
+     |  
+     |  writable(...)
+     |      writable() -> bool.  True if file was opened in a write mode.
+     |  
+     |  write(...)
+     |      write(b) -> int.  Write array of bytes b, return number written.
+     |      
+     |      Only makes one system call, so not all of the data may be written.
+     |      The number of bytes actually written is returned.  In non-blocking mode,
+     |      returns None if the write would block.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  closed
+     |      True if the file is closed
+     |  
+     |  closefd
+     |      True if the file descriptor will be closed by close().
+     |  
+     |  mode
+     |      String giving the file mode
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  flush(...)
+     |      Flush write buffers, if applicable.
+     |      
+     |      This is not implemented for read-only and non-blocking streams.
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  readline(...)
+     |      Read and return a line from the stream.
+     |      
+     |      If limit is specified, at most limit bytes will be read.
+     |      
+     |      The line terminator is always b'\n' for binary files; for text
+     |      files, the newlines argument to open can be used to select the line
+     |      terminator(s) recognized.
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  writelines(...)
+    
+    class IOBase(_io._IOBase)
+     |  The abstract base class for all I/O classes, acting on streams of
+     |  bytes. There is no public constructor.
+     |  
+     |  This class provides dummy implementations for many methods that
+     |  derived classes can override selectively; the default implementations
+     |  represent a file that cannot be read, written or seeked.
+     |  
+     |  Even though IOBase does not declare read, readinto, or write because
+     |  their signatures will vary, implementations and clients should
+     |  consider those methods part of the interface. Also, implementations
+     |  may raise an IOError when operations they do not support are called.
+     |  
+     |  The basic type used for binary data read from or written to a file is
+     |  the bytes type. Method arguments may also be bytearray or memoryview
+     |  of arrays of bytes. In some cases, such as readinto, a writable
+     |  object such as bytearray is required. Text I/O classes work with
+     |  unicode data.
+     |  
+     |  Note that calling any method (except additional calls to close(),
+     |  which are ignored) on a closed stream should raise a ValueError.
+     |  
+     |  IOBase (and its subclasses) support the iterator protocol, meaning
+     |  that an IOBase object can be iterated over yielding the lines in a
+     |  stream.
+     |  
+     |  IOBase also supports the :keyword:`with` statement. In this example,
+     |  fp is closed after the suite of the with statement is complete:
+     |  
+     |  with open('spam.txt', 'r') as fp:
+     |      fp.write('Spam and eggs!')
+     |  
+     |  Method resolution order:
+     |      IOBase
+     |      _io._IOBase
+     |      __builtin__.object
+     |  
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset([])
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _io._IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  close(...)
+     |      Flush and close the IO object.
+     |      
+     |      This method has no effect if the file is already closed.
+     |  
+     |  fileno(...)
+     |      Returns underlying file descriptor if one exists.
+     |      
+     |      An IOError is raised if the IO object does not use a file descriptor.
+     |  
+     |  flush(...)
+     |      Flush write buffers, if applicable.
+     |      
+     |      This is not implemented for read-only and non-blocking streams.
+     |  
+     |  isatty(...)
+     |      Return whether this is an 'interactive' stream.
+     |      
+     |      Return False if it can't be determined.
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  readable(...)
+     |      Return whether object was opened for reading.
+     |      
+     |      If False, read() will raise IOError.
+     |  
+     |  readline(...)
+     |      Read and return a line from the stream.
+     |      
+     |      If limit is specified, at most limit bytes will be read.
+     |      
+     |      The line terminator is always b'\n' for binary files; for text
+     |      files, the newlines argument to open can be used to select the line
+     |      terminator(s) recognized.
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  seek(...)
+     |      Change stream position.
+     |      
+     |      Change the stream position to the given byte offset. The offset is
+     |      interpreted relative to the position indicated by whence.  Values
+     |      for whence are:
+     |      
+     |      * 0 -- start of stream (the default); offset should be zero or positive
+     |      * 1 -- current stream position; offset may be negative
+     |      * 2 -- end of stream; offset is usually negative
+     |      
+     |      Return the new absolute position.
+     |  
+     |  seekable(...)
+     |      Return whether object supports random access.
+     |      
+     |      If False, seek(), tell() and truncate() will raise IOError.
+     |      This method may need to do a test seek().
+     |  
+     |  tell(...)
+     |      Return current stream position.
+     |  
+     |  truncate(...)
+     |      Truncate file to size bytes.
+     |      
+     |      File pointer is left unchanged.  Size defaults to the current IO
+     |      position as reported by tell().  Returns the new size.
+     |  
+     |  writable(...)
+     |      Return whether object was opened for writing.
+     |      
+     |      If False, read() will raise IOError.
+     |  
+     |  writelines(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from _io._IOBase:
+     |  
+     |  closed
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from _io._IOBase:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+    
+    class RawIOBase(_io._RawIOBase, IOBase)
+     |  Base class for raw binary I/O.
+     |  
+     |  Method resolution order:
+     |      RawIOBase
+     |      _io._RawIOBase
+     |      IOBase
+     |      _io._IOBase
+     |      __builtin__.object
+     |  
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset([])
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _io._RawIOBase:
+     |  
+     |  read(...)
+     |  
+     |  readall(...)
+     |      Read until EOF, using multiple read() call.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from IOBase:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _io._IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  close(...)
+     |      Flush and close the IO object.
+     |      
+     |      This method has no effect if the file is already closed.
+     |  
+     |  fileno(...)
+     |      Returns underlying file descriptor if one exists.
+     |      
+     |      An IOError is raised if the IO object does not use a file descriptor.
+     |  
+     |  flush(...)
+     |      Flush write buffers, if applicable.
+     |      
+     |      This is not implemented for read-only and non-blocking streams.
+     |  
+     |  isatty(...)
+     |      Return whether this is an 'interactive' stream.
+     |      
+     |      Return False if it can't be determined.
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  readable(...)
+     |      Return whether object was opened for reading.
+     |      
+     |      If False, read() will raise IOError.
+     |  
+     |  readline(...)
+     |      Read and return a line from the stream.
+     |      
+     |      If limit is specified, at most limit bytes will be read.
+     |      
+     |      The line terminator is always b'\n' for binary files; for text
+     |      files, the newlines argument to open can be used to select the line
+     |      terminator(s) recognized.
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  seek(...)
+     |      Change stream position.
+     |      
+     |      Change the stream position to the given byte offset. The offset is
+     |      interpreted relative to the position indicated by whence.  Values
+     |      for whence are:
+     |      
+     |      * 0 -- start of stream (the default); offset should be zero or positive
+     |      * 1 -- current stream position; offset may be negative
+     |      * 2 -- end of stream; offset is usually negative
+     |      
+     |      Return the new absolute position.
+     |  
+     |  seekable(...)
+     |      Return whether object supports random access.
+     |      
+     |      If False, seek(), tell() and truncate() will raise IOError.
+     |      This method may need to do a test seek().
+     |  
+     |  tell(...)
+     |      Return current stream position.
+     |  
+     |  truncate(...)
+     |      Truncate file to size bytes.
+     |      
+     |      File pointer is left unchanged.  Size defaults to the current IO
+     |      position as reported by tell().  Returns the new size.
+     |  
+     |  writable(...)
+     |      Return whether object was opened for writing.
+     |      
+     |      If False, read() will raise IOError.
+     |  
+     |  writelines(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from _io._IOBase:
+     |  
+     |  closed
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from _io._IOBase:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+    
+    class StringIO(_TextIOBase)
+     |  Text I/O implementation using an in-memory buffer.
+     |  
+     |  The initial_value argument sets the value of object.  The newline
+     |  argument is like the one of TextIOWrapper's constructor.
+     |  
+     |  Method resolution order:
+     |      StringIO
+     |      _TextIOBase
+     |      _IOBase
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __getstate__(...)
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  __setstate__(...)
+     |  
+     |  close(...)
+     |      Close the IO object. Attempting any further operation after the
+     |      object is closed will raise a ValueError.
+     |      
+     |      This method has no effect if the file is already closed.
+     |  
+     |  getvalue(...)
+     |      Retrieve the entire contents of the object.
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  read(...)
+     |      Read at most n characters, returned as a string.
+     |      
+     |      If the argument is negative or omitted, read until EOF
+     |      is reached. Return an empty string at EOF.
+     |  
+     |  readable(...)
+     |      readable() -> bool. Returns True if the IO object can be read.
+     |  
+     |  readline(...)
+     |      Read until newline or EOF.
+     |      
+     |      Returns an empty string if EOF is hit immediately.
+     |  
+     |  seek(...)
+     |      Change stream position.
+     |      
+     |      Seek to character offset pos relative to position indicated by whence:
+     |          0  Start of stream (the default).  pos should be >= 0;
+     |          1  Current position - pos must be 0;
+     |          2  End of stream - pos must be 0.
+     |      Returns the new absolute position.
+     |  
+     |  seekable(...)
+     |      seekable() -> bool. Returns True if the IO object can be seeked.
+     |  
+     |  tell(...)
+     |      Tell the current file position.
+     |  
+     |  truncate(...)
+     |      Truncate size to pos.
+     |      
+     |      The pos argument defaults to the current file position, as
+     |      returned by tell().  The current file position is unchanged.
+     |      Returns the new absolute position.
+     |  
+     |  writable(...)
+     |      writable() -> bool. Returns True if the IO object can be written.
+     |  
+     |  write(...)
+     |      Write string to file.
+     |      
+     |      Returns the number of characters written, which is always equal to
+     |      the length of the string.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  closed
+     |  
+     |  line_buffering
+     |  
+     |  newlines
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _TextIOBase:
+     |  
+     |  detach(...)
+     |      Separate the underlying buffer from the TextIOBase and return it.
+     |      
+     |      After the underlying buffer has been detached, the TextIO is in an
+     |      unusable state.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from _TextIOBase:
+     |  
+     |  encoding
+     |      Encoding of the text stream.
+     |      
+     |      Subclasses should override.
+     |  
+     |  errors
+     |      The error setting of the decoder or encoder.
+     |      
+     |      Subclasses should override.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  fileno(...)
+     |      Returns underlying file descriptor if one exists.
+     |      
+     |      An IOError is raised if the IO object does not use a file descriptor.
+     |  
+     |  flush(...)
+     |      Flush write buffers, if applicable.
+     |      
+     |      This is not implemented for read-only and non-blocking streams.
+     |  
+     |  isatty(...)
+     |      Return whether this is an 'interactive' stream.
+     |      
+     |      Return False if it can't be determined.
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  writelines(...)
+    
+    class TextIOBase(_io._TextIOBase, IOBase)
+     |  Base class for text I/O.
+     |  
+     |  This class provides a character and line based interface to stream
+     |  I/O. There is no readinto method because Python's character strings
+     |  are immutable. There is no public constructor.
+     |  
+     |  Method resolution order:
+     |      TextIOBase
+     |      _io._TextIOBase
+     |      IOBase
+     |      _io._IOBase
+     |      __builtin__.object
+     |  
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset([])
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _io._TextIOBase:
+     |  
+     |  detach(...)
+     |      Separate the underlying buffer from the TextIOBase and return it.
+     |      
+     |      After the underlying buffer has been detached, the TextIO is in an
+     |      unusable state.
+     |  
+     |  read(...)
+     |      Read at most n characters from stream.
+     |      
+     |      Read from underlying buffer until we have n characters or we hit EOF.
+     |      If n is negative or omitted, read until EOF.
+     |  
+     |  readline(...)
+     |      Read until newline or EOF.
+     |      
+     |      Returns an empty string if EOF is hit immediately.
+     |  
+     |  write(...)
+     |      Write string to stream.
+     |      Returns the number of characters written (which is always equal to
+     |      the length of the string).
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from _io._TextIOBase:
+     |  
+     |  encoding
+     |      Encoding of the text stream.
+     |      
+     |      Subclasses should override.
+     |  
+     |  errors
+     |      The error setting of the decoder or encoder.
+     |      
+     |      Subclasses should override.
+     |  
+     |  newlines
+     |      Line endings translated so far.
+     |      
+     |      Only line endings translated during reading are considered.
+     |      
+     |      Subclasses should override.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from IOBase:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _io._IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  close(...)
+     |      Flush and close the IO object.
+     |      
+     |      This method has no effect if the file is already closed.
+     |  
+     |  fileno(...)
+     |      Returns underlying file descriptor if one exists.
+     |      
+     |      An IOError is raised if the IO object does not use a file descriptor.
+     |  
+     |  flush(...)
+     |      Flush write buffers, if applicable.
+     |      
+     |      This is not implemented for read-only and non-blocking streams.
+     |  
+     |  isatty(...)
+     |      Return whether this is an 'interactive' stream.
+     |      
+     |      Return False if it can't be determined.
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  readable(...)
+     |      Return whether object was opened for reading.
+     |      
+     |      If False, read() will raise IOError.
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  seek(...)
+     |      Change stream position.
+     |      
+     |      Change the stream position to the given byte offset. The offset is
+     |      interpreted relative to the position indicated by whence.  Values
+     |      for whence are:
+     |      
+     |      * 0 -- start of stream (the default); offset should be zero or positive
+     |      * 1 -- current stream position; offset may be negative
+     |      * 2 -- end of stream; offset is usually negative
+     |      
+     |      Return the new absolute position.
+     |  
+     |  seekable(...)
+     |      Return whether object supports random access.
+     |      
+     |      If False, seek(), tell() and truncate() will raise IOError.
+     |      This method may need to do a test seek().
+     |  
+     |  tell(...)
+     |      Return current stream position.
+     |  
+     |  truncate(...)
+     |      Truncate file to size bytes.
+     |      
+     |      File pointer is left unchanged.  Size defaults to the current IO
+     |      position as reported by tell().  Returns the new size.
+     |  
+     |  writable(...)
+     |      Return whether object was opened for writing.
+     |      
+     |      If False, read() will raise IOError.
+     |  
+     |  writelines(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from _io._IOBase:
+     |  
+     |  closed
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from _io._IOBase:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+    
+    class TextIOWrapper(_TextIOBase)
+     |  Character and line based layer over a BufferedIOBase object, buffer.
+     |  
+     |  encoding gives the name of the encoding that the stream will be
+     |  decoded or encoded with. It defaults to locale.getpreferredencoding.
+     |  
+     |  errors determines the strictness of encoding and decoding (see the
+     |  codecs.register) and defaults to "strict".
+     |  
+     |  newline controls how line endings are handled. It can be None, '',
+     |  '\n', '\r', and '\r\n'.  It works as follows:
+     |  
+     |  * On input, if newline is None, universal newlines mode is
+     |    enabled. Lines in the input can end in '\n', '\r', or '\r\n', and
+     |    these are translated into '\n' before being returned to the
+     |    caller. If it is '', universal newline mode is enabled, but line
+     |    endings are returned to the caller untranslated. If it has any of
+     |    the other legal values, input lines are only terminated by the given
+     |    string, and the line ending is returned to the caller untranslated.
+     |  
+     |  * On output, if newline is None, any '\n' characters written are
+     |    translated to the system default line separator, os.linesep. If
+     |    newline is '', no translation takes place. If newline is any of the
+     |    other legal values, any '\n' characters written are translated to
+     |    the given string.
+     |  
+     |  If line_buffering is True, a call to flush is implied when a call to
+     |  write contains a newline character.
+     |  
+     |  Method resolution order:
+     |      TextIOWrapper
+     |      _TextIOBase
+     |      _IOBase
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  close(...)
+     |  
+     |  detach(...)
+     |  
+     |  fileno(...)
+     |  
+     |  flush(...)
+     |  
+     |  isatty(...)
+     |  
+     |  next(...)
+     |      x.next() -> the next value, or raise StopIteration
+     |  
+     |  read(...)
+     |  
+     |  readable(...)
+     |  
+     |  readline(...)
+     |  
+     |  seek(...)
+     |  
+     |  seekable(...)
+     |  
+     |  tell(...)
+     |  
+     |  truncate(...)
+     |  
+     |  writable(...)
+     |  
+     |  write(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  buffer
+     |  
+     |  closed
+     |  
+     |  encoding
+     |  
+     |  errors
+     |  
+     |  line_buffering
+     |  
+     |  name
+     |  
+     |  newlines
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from _IOBase:
+     |  
+     |  __enter__(...)
+     |  
+     |  __exit__(...)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  readlines(...)
+     |      Return a list of lines from the stream.
+     |      
+     |      hint can be specified to control the number of lines read: no more
+     |      lines will be read if the total size (in bytes/characters) of all
+     |      lines so far exceeds hint.
+     |  
+     |  writelines(...)
+    
+    class UnsupportedOperation(exceptions.ValueError, exceptions.IOError)
+     |  Method resolution order:
+     |      UnsupportedOperation
+     |      exceptions.ValueError
+     |      exceptions.IOError
+     |      exceptions.EnvironmentError
+     |      exceptions.StandardError
+     |      exceptions.Exception
+     |      exceptions.BaseException
+     |      __builtin__.object
+     |  
+     |  Data descriptors defined here:
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from exceptions.ValueError:
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from exceptions.ValueError:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from exceptions.EnvironmentError:
+     |  
+     |  __reduce__(...)
+     |  
+     |  __str__(...)
+     |      x.__str__() <==> str(x)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from exceptions.EnvironmentError:
+     |  
+     |  errno
+     |      exception errno
+     |  
+     |  filename
+     |      exception filename
+     |  
+     |  strerror
+     |      exception strerror
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from exceptions.BaseException:
+     |  
+     |  __delattr__(...)
+     |      x.__delattr__('name') <==> del x.name
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __getslice__(...)
+     |      x.__getslice__(i, j) <==> x[i:j]
+     |      
+     |      Use of negative indices is not supported.
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __setattr__(...)
+     |      x.__setattr__('name', value) <==> x.name = value
+     |  
+     |  __setstate__(...)
+     |  
+     |  __unicode__(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from exceptions.BaseException:
+     |  
+     |  __dict__
+     |  
+     |  args
+     |  
+     |  message
+
+FUNCTIONS
+    open(...)
+        Open file and return a stream.  Raise IOError upon failure.
+        
+        file is either a text or byte string giving the name (and the path
+        if the file isn't in the current working directory) of the file to
+        be opened or an integer file descriptor of the file to be
+        wrapped. (If a file descriptor is given, it is closed when the
+        returned I/O object is closed, unless closefd is set to False.)
+        
+        mode is an optional string that specifies the mode in which the file
+        is opened. It defaults to 'r' which means open for reading in text
+        mode.  Other common values are 'w' for writing (truncating the file if
+        it already exists), and 'a' for appending (which on some Unix systems,
+        means that all writes append to the end of the file regardless of the
+        current seek position). In text mode, if encoding is not specified the
+        encoding used is platform dependent. (For reading and writing raw
+        bytes use binary mode and leave encoding unspecified.) The available
+        modes are:
+        
+        ========= ===============================================================
+        Character Meaning
+        --------- ---------------------------------------------------------------
+        'r'       open for reading (default)
+        'w'       open for writing, truncating the file first
+        'a'       open for writing, appending to the end of the file if it exists
+        'b'       binary mode
+        't'       text mode (default)
+        '+'       open a disk file for updating (reading and writing)
+        'U'       universal newline mode (for backwards compatibility; unneeded
+                  for new code)
+        ========= ===============================================================
+        
+        The default mode is 'rt' (open for reading text). For binary random
+        access, the mode 'w+b' opens and truncates the file to 0 bytes, while
+        'r+b' opens the file without truncation.
+        
+        Python distinguishes between files opened in binary and text modes,
+        even when the underlying operating system doesn't. Files opened in
+        binary mode (appending 'b' to the mode argument) return contents as
+        bytes objects without any decoding. In text mode (the default, or when
+        't' is appended to the mode argument), the contents of the file are
+        returned as strings, the bytes having been first decoded using a
+        platform-dependent encoding or using the specified encoding if given.
+        
+        buffering is an optional integer used to set the buffering policy.
+        Pass 0 to switch buffering off (only allowed in binary mode), 1 to select
+        line buffering (only usable in text mode), and an integer > 1 to indicate
+        the size of a fixed-size chunk buffer.  When no buffering argument is
+        given, the default buffering policy works as follows:
+        
+        * Binary files are buffered in fixed-size chunks; the size of the buffer
+          is chosen using a heuristic trying to determine the underlying device's
+          "block size" and falling back on `io.DEFAULT_BUFFER_SIZE`.
+          On many systems, the buffer will typically be 4096 or 8192 bytes long.
+        
+        * "Interactive" text files (files for which isatty() returns True)
+          use line buffering.  Other text files use the policy described above
+          for binary files.
+        
+        encoding is the name of the encoding used to decode or encode the
+        file. This should only be used in text mode. The default encoding is
+        platform dependent, but any encoding supported by Python can be
+        passed.  See the codecs module for the list of supported encodings.
+        
+        errors is an optional string that specifies how encoding errors are to
+        be handled---this argument should not be used in binary mode. Pass
+        'strict' to raise a ValueError exception if there is an encoding error
+        (the default of None has the same effect), or pass 'ignore' to ignore
+        errors. (Note that ignoring encoding errors can lead to data loss.)
+        See the documentation for codecs.register for a list of the permitted
+        encoding error strings.
+        
+        newline controls how universal newlines works (it only applies to text
+        mode). It can be None, '', '\n', '\r', and '\r\n'.  It works as
+        follows:
+        
+        * On input, if newline is None, universal newlines mode is
+          enabled. Lines in the input can end in '\n', '\r', or '\r\n', and
+          these are translated into '\n' before being returned to the
+          caller. If it is '', universal newline mode is enabled, but line
+          endings are returned to the caller untranslated. If it has any of
+          the other legal values, input lines are only terminated by the given
+          string, and the line ending is returned to the caller untranslated.
+        
+        * On output, if newline is None, any '\n' characters written are
+          translated to the system default line separator, os.linesep. If
+          newline is '', no translation takes place. If newline is any of the
+          other legal values, any '\n' characters written are translated to
+          the given string.
+        
+        If closefd is False, the underlying file descriptor will be kept open
+        when the file is closed. This does not work when a file name is given
+        and must be True in that case.
+        
+        open() returns a file object whose type depends on the mode, and
+        through which the standard file operations such as reading and writing
+        are performed. When open() is used to open a file in a text mode ('w',
+        'r', 'wt', 'rt', etc.), it returns a TextIOWrapper. When used to open
+        a file in a binary mode, the returned class varies: in read binary
+        mode, it returns a BufferedReader; in write binary and append binary
+        modes, it returns a BufferedWriter, and in read/write mode, it returns
+        a BufferedRandom.
+        
+        It is also possible to use a string or bytearray as a file for both
+        reading and writing. For strings StringIO can be used like a file
+        opened in a text mode, and for bytes a BytesIO can be used like a file
+        opened in a binary mode.
