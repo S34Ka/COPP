@@ -1,0 +1,3101 @@
+[re]
+DESCRIPTION
+    This module provides regular expression matching operations similar to
+    those found in Perl.  It supports both 8-bit and Unicode strings; both
+    the pattern and the strings being processed can contain null bytes and
+    characters outside the US ASCII range.
+    
+    Regular expressions can contain both special and ordinary characters.
+    Most ordinary characters, like "A", "a", or "0", are the simplest
+    regular expressions; they simply match themselves.  You can
+    concatenate ordinary characters, so last matches the string 'last'.
+    
+    The special characters are:
+        "."      Matches any character except a newline.
+        "^"      Matches the start of the string.
+        "$"      Matches the end of the string or just before the newline at
+                 the end of the string.
+        "*"      Matches 0 or more (greedy) repetitions of the preceding RE.
+                 Greedy means that it will match as many repetitions as possible.
+        "+"      Matches 1 or more (greedy) repetitions of the preceding RE.
+        "?"      Matches 0 or 1 (greedy) of the preceding RE.
+        *?,+?,?? Non-greedy versions of the previous three special characters.
+        {m,n}    Matches from m to n repetitions of the preceding RE.
+        {m,n}?   Non-greedy version of the above.
+        "\\"     Either escapes special characters or signals a special sequence.
+        []       Indicates a set of characters.
+                 A "^" as the first character indicates a complementing set.
+        "|"      A|B, creates an RE that will match either A or B.
+        (...)    Matches the RE inside the parentheses.
+                 The contents can be retrieved or matched later in the string.
+        (?iLmsux) Set the I, L, M, S, U, or X flag for the RE (see below).
+        (?:...)  Non-grouping version of regular parentheses.
+        (?P<name>...) The substring matched by the group is accessible by name.
+        (?P=name)     Matches the text matched earlier by the group named name.
+        (?#...)  A comment; ignored.
+        (?=...)  Matches if ... matches next, but doesn't consume the string.
+        (?!...)  Matches if ... doesn't match next.
+        (?<=...) Matches if preceded by ... (must be fixed length).
+        (?<!...) Matches if not preceded by ... (must be fixed length).
+        (?(id/name)yes|no) Matches yes pattern if the group with id/name matched,
+                           the (optional) no pattern otherwise.
+    
+    The special sequences consist of "\\" and a character from the list
+    below.  If the ordinary character is not on the list, then the
+    resulting RE will match the second character.
+        \number  Matches the contents of the group of the same number.
+        \A       Matches only at the start of the string.
+        \Z       Matches only at the end of the string.
+        \b       Matches the empty string, but only at the start or end of a word.
+        \B       Matches the empty string, but not at the start or end of a word.
+        \d       Matches any decimal digit; equivalent to the set [0-9].
+        \D       Matches any non-digit character; equivalent to the set [^0-9].
+        \s       Matches any whitespace character; equivalent to [ \t\n\r\f\v].
+        \S       Matches any non-whitespace character; equiv. to [^ \t\n\r\f\v].
+        \w       Matches any alphanumeric character; equivalent to [a-zA-Z0-9_].
+                 With LOCALE, it will match the set [0-9_] plus characters defined
+                 as letters for the current locale.
+        \W       Matches the complement of \w.
+        \\       Matches a literal backslash.
+    
+    This module exports the following functions:
+        match    Match a regular expression pattern to the beginning of a string.
+        search   Search a string for the presence of a pattern.
+        sub      Substitute occurrences of a pattern found in a string.
+        subn     Same as sub, but also return the number of substitutions made.
+        split    Split a string by the occurrences of a pattern.
+        findall  Find all occurrences of a pattern in a string.
+        finditer Return an iterator yielding a match object for each match.
+        compile  Compile a pattern into a RegexObject.
+        purge    Clear the regular expression cache.
+        escape   Backslash all non-alphanumerics in a string.
+    
+    Some of the functions in this module takes flags as optional parameters:
+        I  IGNORECASE  Perform case-insensitive matching.
+        L  LOCALE      Make \w, \W, \b, \B, dependent on the current locale.
+        M  MULTILINE   "^" matches the beginning of lines (after a newline)
+                       as well as the string.
+                       "$" matches the end of lines (before a newline) as well
+                       as the end of the string.
+        S  DOTALL      "." matches any character at all, including the newline.
+        X  VERBOSE     Ignore whitespace and comments for nicer looking RE's.
+        U  UNICODE     Make \w, \W, \b, \B, dependent on the Unicode locale.
+    
+    This module also defines an exception 'error'.
+
+CLASSES
+    exceptions.Exception(exceptions.BaseException)
+        sre_constants.error
+    
+    class error(exceptions.Exception)
+     |  Method resolution order:
+     |      error
+     |      exceptions.Exception
+     |      exceptions.BaseException
+     |      __builtin__.object
+     |  
+     |  Data descriptors defined here:
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from exceptions.Exception:
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from exceptions.Exception:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from exceptions.BaseException:
+     |  
+     |  __delattr__(...)
+     |      x.__delattr__('name') <==> del x.name
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __getslice__(...)
+     |      x.__getslice__(i, j) <==> x[i:j]
+     |      
+     |      Use of negative indices is not supported.
+     |  
+     |  __reduce__(...)
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __setattr__(...)
+     |      x.__setattr__('name', value) <==> x.name = value
+     |  
+     |  __setstate__(...)
+     |  
+     |  __str__(...)
+     |      x.__str__() <==> str(x)
+     |  
+     |  __unicode__(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from exceptions.BaseException:
+     |  
+     |  __dict__
+     |  
+     |  args
+     |  
+     |  message
+
+FUNCTIONS
+    compile(pattern, flags=0)
+        Compile a regular expression pattern, returning a pattern object.
+    
+    escape(pattern)
+        Escape all non-alphanumeric characters in pattern.
+    
+    findall(pattern, string, flags=0)
+        Return a list of all non-overlapping matches in the string.
+        
+        If one or more groups are present in the pattern, return a
+        list of groups; this will be a list of tuples if the pattern
+        has more than one group.
+        
+        Empty matches are included in the result.
+    
+    finditer(pattern, string, flags=0)
+        Return an iterator over all non-overlapping matches in the
+        string.  For each match, the iterator returns a match object.
+        
+        Empty matches are included in the result.
+    
+    match(pattern, string, flags=0)
+        Try to apply the pattern at the start of the string, returning
+        a match object, or None if no match was found.
+    
+    purge()
+        Clear the regular expression cache
+    
+    search(pattern, string, flags=0)
+        Scan through string looking for a match to the pattern, returning
+        a match object, or None if no match was found.
+    
+    split(pattern, string, maxsplit=0, flags=0)
+        Split the source string by the occurrences of the pattern,
+        returning a list containing the resulting substrings.
+    
+    sub(pattern, repl, string, count=0, flags=0)
+        Return the string obtained by replacing the leftmost
+        non-overlapping occurrences of the pattern in string by the
+        replacement repl.  repl can be either a string or a callable;
+        if a string, backslash escapes in it are processed.  If it is
+        a callable, it's passed the match object and must return
+        a replacement string to be used.
+    
+    subn(pattern, repl, string, count=0, flags=0)
+        Return a 2-tuple containing (new_string, number).
+        new_string is the string obtained by replacing the leftmost
+        non-overlapping occurrences of the pattern in the source
+        string by the replacement repl.  number is the number of
+        substitutions that were made. repl can be either a string or a
+        callable; if a string, backslash escapes in it are processed.
+        If it is a callable, it's passed the match object and must
+        return a replacement string to be used.
+    
+    template(pattern, flags=0)
+        Compile a template pattern, returning a pattern object
+
+[os]
+DESCRIPTION
+    This exports:
+      - all functions from posix, nt, os2, or ce, e.g. unlink, stat, etc.
+      - os.path is one of the modules posixpath, or ntpath
+      - os.name is 'posix', 'nt', 'os2', 'ce' or 'riscos'
+      - os.curdir is a string representing the current directory ('.' or ':')
+      - os.pardir is a string representing the parent directory ('..' or '::')
+      - os.sep is the (or a most common) pathname separator ('/' or ':' or '\\')
+      - os.extsep is the extension separator ('.' or '/')
+      - os.altsep is the alternate pathname separator (None or '/')
+      - os.pathsep is the component separator used in $PATH etc
+      - os.linesep is the line separator in text files ('\r' or '\n' or '\r\n')
+      - os.defpath is the default search path for executables
+      - os.devnull is the file path of the null device ('/dev/null', etc.)
+    
+    Programs that import and use 'os' stand a better chance of being
+    portable between different platforms.  Of course, they must then
+    only use functions that are defined by all platforms (e.g., unlink
+    and opendir), and leave all pathname manipulation to os.path
+    (e.g., split and join).
+
+CLASSES
+    __builtin__.object
+        nt.stat_result
+        nt.statvfs_result
+    exceptions.EnvironmentError(exceptions.StandardError)
+        exceptions.OSError
+    
+    error = class OSError(EnvironmentError)
+     |  OS system call failed.
+     |  
+     |  Method resolution order:
+     |      OSError
+     |      EnvironmentError
+     |      StandardError
+     |      Exception
+     |      BaseException
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from EnvironmentError:
+     |  
+     |  __reduce__(...)
+     |  
+     |  __str__(...)
+     |      x.__str__() <==> str(x)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from EnvironmentError:
+     |  
+     |  errno
+     |      exception errno
+     |  
+     |  filename
+     |      exception filename
+     |  
+     |  strerror
+     |      exception strerror
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from BaseException:
+     |  
+     |  __delattr__(...)
+     |      x.__delattr__('name') <==> del x.name
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __getslice__(...)
+     |      x.__getslice__(i, j) <==> x[i:j]
+     |      
+     |      Use of negative indices is not supported.
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __setattr__(...)
+     |      x.__setattr__('name', value) <==> x.name = value
+     |  
+     |  __setstate__(...)
+     |  
+     |  __unicode__(...)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from BaseException:
+     |  
+     |  __dict__
+     |  
+     |  args
+     |  
+     |  message
+    
+    class stat_result(__builtin__.object)
+     |  stat_result: Result from stat or lstat.
+     |  
+     |  This object may be accessed either as a tuple of
+     |    (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime)
+     |  or via the attributes st_mode, st_ino, st_dev, st_nlink, st_uid, and so on.
+     |  
+     |  Posix/windows: If your platform supports st_blksize, st_blocks, st_rdev,
+     |  or st_flags, they are available as attributes only.
+     |  
+     |  See os.stat for more information.
+     |  
+     |  Methods defined here:
+     |  
+     |  __add__(...)
+     |      x.__add__(y) <==> x+y
+     |  
+     |  __contains__(...)
+     |      x.__contains__(y) <==> y in x
+     |  
+     |  __eq__(...)
+     |      x.__eq__(y) <==> x==y
+     |  
+     |  __ge__(...)
+     |      x.__ge__(y) <==> x>=y
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __getslice__(...)
+     |      x.__getslice__(i, j) <==> x[i:j]
+     |      
+     |      Use of negative indices is not supported.
+     |  
+     |  __gt__(...)
+     |      x.__gt__(y) <==> x>y
+     |  
+     |  __hash__(...)
+     |      x.__hash__() <==> hash(x)
+     |  
+     |  __le__(...)
+     |      x.__le__(y) <==> x<=y
+     |  
+     |  __len__(...)
+     |      x.__len__() <==> len(x)
+     |  
+     |  __lt__(...)
+     |      x.__lt__(y) <==> x<y
+     |  
+     |  __mul__(...)
+     |      x.__mul__(n) <==> x*n
+     |  
+     |  __ne__(...)
+     |      x.__ne__(y) <==> x!=y
+     |  
+     |  __reduce__(...)
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __rmul__(...)
+     |      x.__rmul__(n) <==> n*x
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  st_atime
+     |      time of last access
+     |  
+     |  st_ctime
+     |      time of last change
+     |  
+     |  st_dev
+     |      device
+     |  
+     |  st_gid
+     |      group ID of owner
+     |  
+     |  st_ino
+     |      inode
+     |  
+     |  st_mode
+     |      protection bits
+     |  
+     |  st_mtime
+     |      time of last modification
+     |  
+     |  st_nlink
+     |      number of hard links
+     |  
+     |  st_size
+     |      total size, in bytes
+     |  
+     |  st_uid
+     |      user ID of owner
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  n_fields = 13
+     |  
+     |  n_sequence_fields = 10
+     |  
+     |  n_unnamed_fields = 3
+    
+    class statvfs_result(__builtin__.object)
+     |  statvfs_result: Result from statvfs or fstatvfs.
+     |  
+     |  This object may be accessed either as a tuple of
+     |    (bsize, frsize, blocks, bfree, bavail, files, ffree, favail, flag, namemax),
+     |  or via the attributes f_bsize, f_frsize, f_blocks, f_bfree, and so on.
+     |  
+     |  See os.statvfs for more information.
+     |  
+     |  Methods defined here:
+     |  
+     |  __add__(...)
+     |      x.__add__(y) <==> x+y
+     |  
+     |  __contains__(...)
+     |      x.__contains__(y) <==> y in x
+     |  
+     |  __eq__(...)
+     |      x.__eq__(y) <==> x==y
+     |  
+     |  __ge__(...)
+     |      x.__ge__(y) <==> x>=y
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __getslice__(...)
+     |      x.__getslice__(i, j) <==> x[i:j]
+     |      
+     |      Use of negative indices is not supported.
+     |  
+     |  __gt__(...)
+     |      x.__gt__(y) <==> x>y
+     |  
+     |  __hash__(...)
+     |      x.__hash__() <==> hash(x)
+     |  
+     |  __le__(...)
+     |      x.__le__(y) <==> x<=y
+     |  
+     |  __len__(...)
+     |      x.__len__() <==> len(x)
+     |  
+     |  __lt__(...)
+     |      x.__lt__(y) <==> x<y
+     |  
+     |  __mul__(...)
+     |      x.__mul__(n) <==> x*n
+     |  
+     |  __ne__(...)
+     |      x.__ne__(y) <==> x!=y
+     |  
+     |  __reduce__(...)
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __rmul__(...)
+     |      x.__rmul__(n) <==> n*x
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  f_bavail
+     |  
+     |  f_bfree
+     |  
+     |  f_blocks
+     |  
+     |  f_bsize
+     |  
+     |  f_favail
+     |  
+     |  f_ffree
+     |  
+     |  f_files
+     |  
+     |  f_flag
+     |  
+     |  f_frsize
+     |  
+     |  f_namemax
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  n_fields = 10
+     |  
+     |  n_sequence_fields = 10
+     |  
+     |  n_unnamed_fields = 0
+
+FUNCTIONS
+    abort(...)
+        abort() -> does not return!
+        
+        Abort the interpreter immediately.  This 'dumps core' or otherwise fails
+        in the hardest way possible on the hosting operating system.
+    
+    access(...)
+        access(path, mode) -> True if granted, False otherwise
+        
+        Use the real uid/gid to test for access to a path.  Note that most
+        operations will use the effective uid/gid, therefore this routine can
+        be used in a suid/sgid environment to test if the invoking user has the
+        specified access to the path.  The mode argument can be F_OK to test
+        existence, or the inclusive-OR of R_OK, W_OK, and X_OK.
+    
+    chdir(...)
+        chdir(path)
+        
+        Change the current working directory to the specified path.
+    
+    chmod(...)
+        chmod(path, mode)
+        
+        Change the access permissions of a file.
+    
+    close(...)
+        close(fd)
+        
+        Close a file descriptor (for low level IO).
+    
+    closerange(...)
+        closerange(fd_low, fd_high)
+        
+        Closes all file descriptors in [fd_low, fd_high), ignoring errors.
+    
+    dup(...)
+        dup(fd) -> fd2
+        
+        Return a duplicate of a file descriptor.
+    
+    dup2(...)
+        dup2(old_fd, new_fd)
+        
+        Duplicate file descriptor.
+    
+    execl(file, *args)
+        execl(file, *args)
+        
+        Execute the executable file with argument list args, replacing the
+        current process.
+    
+    execle(file, *args)
+        execle(file, *args, env)
+        
+        Execute the executable file with argument list args and
+        environment env, replacing the current process.
+    
+    execlp(file, *args)
+        execlp(file, *args)
+        
+        Execute the executable file (which is searched for along $PATH)
+        with argument list args, replacing the current process.
+    
+    execlpe(file, *args)
+        execlpe(file, *args, env)
+        
+        Execute the executable file (which is searched for along $PATH)
+        with argument list args and environment env, replacing the current
+        process.
+    
+    execv(...)
+        execv(path, args)
+        
+        Execute an executable path with arguments, replacing current process.
+        
+            path: path of executable file
+            args: tuple or list of strings
+    
+    execve(...)
+        execve(path, args, env)
+        
+        Execute a path with arguments and environment, replacing current process.
+        
+            path: path of executable file
+            args: tuple or list of arguments
+            env: dictionary of strings mapping to strings
+    
+    execvp(file, args)
+        execvp(file, args)
+        
+        Execute the executable file (which is searched for along $PATH)
+        with argument list args, replacing the current process.
+        args may be a list or tuple of strings.
+    
+    execvpe(file, args, env)
+        execvpe(file, args, env)
+        
+        Execute the executable file (which is searched for along $PATH)
+        with argument list args and environment env , replacing the
+        current process.
+        args may be a list or tuple of strings.
+    
+    fdopen(...)
+        fdopen(fd [, mode='r' [, bufsize]]) -> file_object
+        
+        Return an open file object connected to a file descriptor.
+    
+    fstat(...)
+        fstat(fd) -> stat result
+        
+        Like stat(), but for an open file descriptor.
+    
+    fsync(...)
+        fsync(fildes)
+        
+        force write of file with filedescriptor to disk.
+    
+    getcwd(...)
+        getcwd() -> path
+        
+        Return a string representing the current working directory.
+    
+    getcwdu(...)
+        getcwdu() -> path
+        
+        Return a unicode string representing the current working directory.
+    
+    getenv(key, default=None)
+        Get an environment variable, return None if it doesn't exist.
+        The optional second argument can specify an alternate default.
+    
+    getpid(...)
+        getpid() -> pid
+        
+        Return the current process id
+    
+    isatty(...)
+        isatty(fd) -> bool
+        
+        Return True if the file descriptor 'fd' is an open file descriptor
+        connected to the slave end of a terminal.
+    
+    kill(...)
+        kill(pid, sig)
+        
+        Kill a process with a signal.
+    
+    listdir(...)
+        listdir(path) -> list_of_strings
+        
+        Return a list containing the names of the entries in the directory.
+        
+            path: path of directory to list
+        
+        The list is in arbitrary order.  It does not include the special
+        entries '.' and '..' even if they are present in the directory.
+    
+    lseek(...)
+        lseek(fd, pos, how) -> newpos
+        
+        Set the current position of a file descriptor.
+        Return the new cursor position in bytes, starting from the beginning.
+    
+    lstat(...)
+        lstat(path) -> stat result
+        
+        Like stat(path), but do not follow symbolic links.
+    
+    makedirs(name, mode=511)
+        makedirs(path [, mode=0777])
+        
+        Super-mkdir; create a leaf directory and all intermediate ones.
+        Works like mkdir, except that any intermediate path segment (not
+        just the rightmost) will be created if it does not exist.  This is
+        recursive.
+    
+    mkdir(...)
+        mkdir(path [, mode=0777])
+        
+        Create a directory.
+    
+    open(...)
+        open(filename, flag [, mode=0777]) -> fd
+        
+        Open a file (for low level IO).
+    
+    pipe(...)
+        pipe() -> (read_end, write_end)
+        
+        Create a pipe.
+    
+    popen(...)
+        popen(command [, mode='r' [, bufsize]]) -> pipe
+        
+        Open a pipe to/from a command returning a file object.
+    
+    popen2(...)
+    
+    popen3(...)
+    
+    popen4(...)
+    
+    putenv(...)
+        putenv(key, value)
+        
+        Change or add an environment variable.
+    
+    read(...)
+        read(fd, buffersize) -> string
+        
+        Read a file descriptor.
+    
+    remove(...)
+        remove(path)
+        
+        Remove a file (same as unlink(path)).
+    
+    removedirs(name)
+        removedirs(path)
+        
+        Super-rmdir; remove a leaf directory and all empty intermediate
+        ones.  Works like rmdir except that, if the leaf directory is
+        successfully removed, directories corresponding to rightmost path
+        segments will be pruned away until either the whole path is
+        consumed or an error occurs.  Errors during this latter phase are
+        ignored -- they generally mean that a directory was not empty.
+    
+    rename(...)
+        rename(old, new)
+        
+        Rename a file or directory.
+    
+    renames(old, new)
+        renames(old, new)
+        
+        Super-rename; create directories as necessary and delete any left
+        empty.  Works like rename, except creation of any intermediate
+        directories needed to make the new pathname good is attempted
+        first.  After the rename, directories corresponding to rightmost
+        path segments of the old name will be pruned until either the
+        whole path is consumed or a nonempty directory is found.
+        
+        Note: this function can fail with the new directory structure made
+        if you lack permissions needed to unlink the leaf directory or
+        file.
+    
+    rmdir(...)
+        rmdir(path)
+        
+        Remove a directory.
+    
+    spawnl(mode, file, *args)
+        spawnl(mode, file, *args) -> integer
+        
+        Execute file with arguments from args in a subprocess.
+        If mode == P_NOWAIT return the pid of the process.
+        If mode == P_WAIT return the process's exit code if it exits normally;
+        otherwise return -SIG, where SIG is the signal that killed it.
+    
+    spawnle(mode, file, *args)
+        spawnle(mode, file, *args, env) -> integer
+        
+        Execute file with arguments from args in a subprocess with the
+        supplied environment.
+        If mode == P_NOWAIT return the pid of the process.
+        If mode == P_WAIT return the process's exit code if it exits normally;
+        otherwise return -SIG, where SIG is the signal that killed it.
+    
+    spawnv(...)
+        spawnv(mode, path, args)
+        
+        Execute the program 'path' in a new process.
+        
+            mode: mode of process creation
+            path: path of executable file
+            args: tuple or list of strings
+    
+    spawnve(...)
+        spawnve(mode, path, args, env)
+        
+        Execute the program 'path' in a new process.
+        
+            mode: mode of process creation
+            path: path of executable file
+            args: tuple or list of arguments
+            env: dictionary of strings mapping to strings
+    
+    startfile(...)
+        startfile(filepath [, operation]) - Start a file with its associated
+        application.
+        
+        When "operation" is not specified or "open", this acts like
+        double-clicking the file in Explorer, or giving the file name as an
+        argument to the DOS "start" command: the file is opened with whatever
+        application (if any) its extension is associated.
+        When another "operation" is given, it specifies what should be done with
+        the file.  A typical operation is "print".
+        
+        startfile returns as soon as the associated application is launched.
+        There is no option to wait for the application to close, and no way
+        to retrieve the application's exit status.
+        
+        The filepath is relative to the current directory.  If you want to use
+        an absolute path, make sure the first character is not a slash ("/");
+        the underlying Win32 ShellExecute function doesn't work if it is.
+    
+    stat(...)
+        stat(path) -> stat result
+        
+        Perform a stat system call on the given path.
+    
+    stat_float_times(...)
+        stat_float_times([newval]) -> oldval
+        
+        Determine whether os.[lf]stat represents time stamps as float objects.
+        If newval is True, future calls to stat() return floats, if it is False,
+        future calls return ints. 
+        If newval is omitted, return the current setting.
+    
+    strerror(...)
+        strerror(code) -> string
+        
+        Translate an error code to a message string.
+    
+    system(...)
+        system(command) -> exit_status
+        
+        Execute the command (a string) in a subshell.
+    
+    tempnam(...)
+        tempnam([dir[, prefix]]) -> string
+        
+        Return a unique name for a temporary file.
+        The directory and a prefix may be specified as strings; they may be omitted
+        or None if not needed.
+    
+    times(...)
+        times() -> (utime, stime, cutime, cstime, elapsed_time)
+        
+        Return a tuple of floating point numbers indicating process times.
+    
+    tmpfile(...)
+        tmpfile() -> file object
+        
+        Create a temporary file with no directory entries.
+    
+    tmpnam(...)
+        tmpnam() -> string
+        
+        Return a unique name for a temporary file.
+    
+    umask(...)
+        umask(new_mask) -> old_mask
+        
+        Set the current numeric umask and return the previous umask.
+    
+    unlink(...)
+        unlink(path)
+        
+        Remove a file (same as remove(path)).
+    
+    urandom(...)
+        urandom(n) -> str
+        
+        Return n random bytes suitable for cryptographic use.
+    
+    utime(...)
+        utime(path, (atime, mtime))
+        utime(path, None)
+        
+        Set the access and modified time of the file to the given values.  If the
+        second form is used, set the access and modified times to the current time.
+    
+    waitpid(...)
+        waitpid(pid, options) -> (pid, status << 8)
+        
+        Wait for completion of a given process.  options is ignored on Windows.
+    
+    walk(top, topdown=True, onerror=None, followlinks=False)
+        Directory tree generator.
+        
+        For each directory in the directory tree rooted at top (including top
+        itself, but excluding '.' and '..'), yields a 3-tuple
+        
+            dirpath, dirnames, filenames
+        
+        dirpath is a string, the path to the directory.  dirnames is a list of
+        the names of the subdirectories in dirpath (excluding '.' and '..').
+        filenames is a list of the names of the non-directory files in dirpath.
+        Note that the names in the lists are just names, with no path components.
+        To get a full path (which begins with top) to a file or directory in
+        dirpath, do os.path.join(dirpath, name).
+        
+        If optional arg 'topdown' is true or not specified, the triple for a
+        directory is generated before the triples for any of its subdirectories
+        (directories are generated top down).  If topdown is false, the triple
+        for a directory is generated after the triples for all of its
+        subdirectories (directories are generated bottom up).
+        
+        When topdown is true, the caller can modify the dirnames list in-place
+        (e.g., via del or slice assignment), and walk will only recurse into the
+        subdirectories whose names remain in dirnames; this can be used to prune the
+        search, or to impose a specific order of visiting.  Modifying dirnames when
+        topdown is false is ineffective, since the directories in dirnames have
+        already been generated by the time dirnames itself is generated. No matter
+        the value of topdown, the list of subdirectories is retrieved before the
+        tuples for the directory and its subdirectories are generated.
+        
+        By default errors from the os.listdir() call are ignored.  If
+        optional arg 'onerror' is specified, it should be a function; it
+        will be called with one argument, an os.error instance.  It can
+        report the error to continue with the walk, or raise the exception
+        to abort the walk.  Note that the filename is available as the
+        filename attribute of the exception object.
+        
+        By default, os.walk does not follow symbolic links to subdirectories on
+        systems that support them.  In order to get this functionality, set the
+        optional argument 'followlinks' to true.
+        
+        Caution:  if you pass a relative pathname for top, don't change the
+        current working directory between resumptions of walk.  walk never
+        changes the current directory, and assumes that the client doesn't
+        either.
+        
+        Example:
+        
+        import os
+        from os.path import join, getsize
+        for root, dirs, files in os.walk('python/Lib/email'):
+            print root, "consumes",
+            print sum([getsize(join(root, name)) for name in files]),
+            print "bytes in", len(files), "non-directory files"
+            if 'CVS' in dirs:
+                dirs.remove('CVS')  # don't visit CVS directories
+    
+    write(...)
+        write(fd, string) -> byteswritten
+        
+        Write a string to a file descriptor.
+
+[sys]
+DESCRIPTION
+    This module provides access to some objects used or maintained by the
+    interpreter and to functions that interact strongly with the interpreter.
+    
+    Dynamic objects:
+    
+    argv -- command line arguments; argv[0] is the script pathname if known
+    path -- module search path; path[0] is the script directory, else ''
+    modules -- dictionary of loaded modules
+    
+    displayhook -- called to show results in an interactive session
+    excepthook -- called to handle any uncaught exception other than SystemExit
+      To customize printing in an interactive session or to install a custom
+      top-level exception handler, assign other functions to replace these.
+    
+    exitfunc -- if sys.exitfunc exists, this routine is called when Python exits
+      Assigning to sys.exitfunc is deprecated; use the atexit module instead.
+    
+    stdin -- standard input file object; used by raw_input() and input()
+    stdout -- standard output file object; used by the print statement
+    stderr -- standard error object; used for error messages
+      By assigning other file objects (or objects that behave like files)
+      to these, it is possible to redirect all of the interpreter's I/O.
+    
+    last_type -- type of last uncaught exception
+    last_value -- value of last uncaught exception
+    last_traceback -- traceback of last uncaught exception
+      These three are only available in an interactive session after a
+      traceback has been printed.
+    
+    exc_type -- type of exception currently being handled
+    exc_value -- value of exception currently being handled
+    exc_traceback -- traceback of exception currently being handled
+      The function exc_info() should be used instead of these three,
+      because it is thread-safe.
+    
+    Static objects:
+    
+    float_info -- a dict with information about the float inplementation.
+    long_info -- a struct sequence with information about the long implementation.
+    maxint -- the largest supported integer (the smallest is -maxint-1)
+    maxsize -- the largest supported length of containers.
+    maxunicode -- the largest supported character
+    builtin_module_names -- tuple of module names built into this interpreter
+    version -- the version of this interpreter as a string
+    version_info -- version information as a named tuple
+    hexversion -- version information encoded as a single integer
+    copyright -- copyright notice pertaining to this interpreter
+    platform -- platform identifier
+    executable -- absolute path of the executable binary of the Python interpreter
+    prefix -- prefix used to find the Python library
+    exec_prefix -- prefix used to find the machine-specific Python library
+    float_repr_style -- string indicating the style of repr() output for floats
+    dllhandle -- [Windows only] integer handle of the Python DLL
+    winver -- [Windows only] version number of the Python DLL
+    __stdin__ -- the original stdin; don't touch!
+    __stdout__ -- the original stdout; don't touch!
+    __stderr__ -- the original stderr; don't touch!
+    __displayhook__ -- the original displayhook; don't touch!
+    __excepthook__ -- the original excepthook; don't touch!
+    
+    Functions:
+    
+    displayhook() -- print an object to the screen, and save it in __builtin__._
+    excepthook() -- print an exception and its traceback to sys.stderr
+    exc_info() -- return thread-safe information about the current exception
+    exc_clear() -- clear the exception state for the current thread
+    exit() -- exit the interpreter by raising SystemExit
+    getdlopenflags() -- returns flags to be used for dlopen() calls
+    getprofile() -- get the global profiling function
+    getrefcount() -- return the reference count for an object (plus one :-)
+    getrecursionlimit() -- return the max recursion depth for the interpreter
+    getsizeof() -- return the size of an object in bytes
+    gettrace() -- get the global debug tracing function
+    setcheckinterval() -- control how often the interpreter checks for events
+    setdlopenflags() -- set the flags to be used for dlopen() calls
+    setprofile() -- set the global profiling function
+    setrecursionlimit() -- set the max recursion depth for the interpreter
+    settrace() -- set the global debug tracing function
+
+FUNCTIONS
+    __displayhook__ = displayhook(...)
+        displayhook(object) -> None
+        
+        Print an object to sys.stdout and also save it in __builtin__._
+    
+    __excepthook__ = excepthook(...)
+        excepthook(exctype, value, traceback) -> None
+        
+        Handle an exception by displaying it with a traceback on sys.stderr.
+    
+    call_tracing(...)
+        call_tracing(func, args) -> object
+        
+        Call func(*args), while tracing is enabled.  The tracing state is
+        saved, and restored afterwards.  This is intended to be called from
+        a debugger from a checkpoint, to recursively debug some other code.
+    
+    callstats(...)
+        callstats() -> tuple of integers
+        
+        Return a tuple of function call statistics, if CALL_PROFILE was defined
+        when Python was built.  Otherwise, return None.
+        
+        When enabled, this function returns detailed, implementation-specific
+        details about the number of function calls executed. The return value is
+        a 11-tuple where the entries in the tuple are counts of:
+        0. all function calls
+        1. calls to PyFunction_Type objects
+        2. PyFunction calls that do not create an argument tuple
+        3. PyFunction calls that do not create an argument tuple
+           and bypass PyEval_EvalCodeEx()
+        4. PyMethod calls
+        5. PyMethod calls on bound methods
+        6. PyType calls
+        7. PyCFunction calls
+        8. generator calls
+        9. All other calls
+        10. Number of stack pops performed by call_function()
+    
+    displayhook(...)
+        displayhook(object) -> None
+        
+        Print an object to sys.stdout and also save it in __builtin__._
+    
+    exc_clear(...)
+        exc_clear() -> None
+        
+        Clear global information on the current exception.  Subsequent calls to
+        exc_info() will return (None,None,None) until another exception is raised
+        in the current thread or the execution stack returns to a frame where
+        another exception is being handled.
+    
+    exc_info(...)
+        exc_info() -> (type, value, traceback)
+        
+        Return information about the most recent exception caught by an except
+        clause in the current stack frame or in an older stack frame.
+    
+    excepthook(...)
+        excepthook(exctype, value, traceback) -> None
+        
+        Handle an exception by displaying it with a traceback on sys.stderr.
+    
+    exit(...)
+        exit([status])
+        
+        Exit the interpreter by raising SystemExit(status).
+        If the status is omitted or None, it defaults to zero (i.e., success).
+        If the status is an integer, it will be used as the system exit status.
+        If it is another kind of object, it will be printed and the system
+        exit status will be one (i.e., failure).
+    
+    getcheckinterval(...)
+        getcheckinterval() -> current check interval; see setcheckinterval().
+    
+    getdefaultencoding(...)
+        getdefaultencoding() -> string
+        
+        Return the current default string encoding used by the Unicode 
+        implementation.
+    
+    getfilesystemencoding(...)
+        getfilesystemencoding() -> string
+        
+        Return the encoding used to convert Unicode filenames in
+        operating system filenames.
+    
+    getprofile(...)
+        getprofile()
+        
+        Return the profiling function set with sys.setprofile.
+        See the profiler chapter in the library manual.
+    
+    getrecursionlimit(...)
+        getrecursionlimit()
+        
+        Return the current value of the recursion limit, the maximum depth
+        of the Python interpreter stack.  This limit prevents infinite
+        recursion from causing an overflow of the C stack and crashing Python.
+    
+    getrefcount(...)
+        getrefcount(object) -> integer
+        
+        Return the reference count of object.  The count returned is generally
+        one higher than you might expect, because it includes the (temporary)
+        reference as an argument to getrefcount().
+    
+    getsizeof(...)
+        getsizeof(object, default) -> int
+        
+        Return the size of object in bytes.
+    
+    gettrace(...)
+        gettrace()
+        
+        Return the global debug tracing function set with sys.settrace.
+        See the debugger chapter in the library manual.
+    
+    getwindowsversion(...)
+        getwindowsversion()
+        
+        Return information about the running version of Windows as a named tuple.
+        The members are named: major, minor, build, platform, service_pack,
+        service_pack_major, service_pack_minor, suite_mask, and product_type. For
+        backward compatibility, only the first 5 items are available by indexing.
+        All elements are numbers, except service_pack which is a string. Platform
+        may be 0 for win32s, 1 for Windows 9x/ME, 2 for Windows NT/2000/XP/Vista/7,
+        3 for Windows CE. Product_type may be 1 for a workstation, 2 for a domain
+        controller, 3 for a server.
+    
+    setcheckinterval(...)
+        setcheckinterval(n)
+        
+        Tell the Python interpreter to check for asynchronous events every
+        n instructions.  This also affects how often thread switches occur.
+    
+    setprofile(...)
+        setprofile(function)
+        
+        Set the profiling function.  It will be called on each function call
+        and return.  See the profiler chapter in the library manual.
+    
+    setrecursionlimit(...)
+        setrecursionlimit(n)
+        
+        Set the maximum depth of the Python interpreter stack to n.  This
+        limit prevents infinite recursion from causing an overflow of the C
+        stack and crashing Python.  The highest possible limit is platform-
+        dependent.
+    
+    settrace(...)
+        settrace(function)
+        
+        Set the global debug tracing function.  It will be called on each
+        function call.  See the debugger chapter in the library manual.
+
+[collections]
+DESCRIPTION
+    This module implements specialized container datatypes providing
+    alternatives to Python's general purpose built-in containers, dict,
+    list, set, and tuple.
+    
+    * namedtuple   factory function for creating tuple subclasses with named fields
+    * deque        list-like container with fast appends and pops on either end
+    * Counter      dict subclass for counting hashable objects
+    * OrderedDict  dict subclass that remembers the order entries were added
+    * defaultdict  dict subclass that calls a factory function to supply missing values
+
+CLASSES
+    __builtin__.dict(__builtin__.object)
+        Counter
+        OrderedDict
+        defaultdict
+    __builtin__.object
+        _abcoll.Callable
+        _abcoll.Container
+        _abcoll.Hashable
+        _abcoll.Iterable
+            _abcoll.Iterator
+        _abcoll.Sized
+            _abcoll.Mapping(_abcoll.Sized, _abcoll.Iterable, _abcoll.Container)
+                _abcoll.MutableMapping
+            _abcoll.MappingView
+                _abcoll.ItemsView(_abcoll.MappingView, _abcoll.Set)
+                _abcoll.KeysView(_abcoll.MappingView, _abcoll.Set)
+                _abcoll.ValuesView
+            _abcoll.Sequence(_abcoll.Sized, _abcoll.Iterable, _abcoll.Container)
+                _abcoll.MutableSequence
+            _abcoll.Set(_abcoll.Sized, _abcoll.Iterable, _abcoll.Container)
+                _abcoll.MutableSet
+        deque
+    
+    class Callable(__builtin__.object)
+     |  Methods defined here:
+     |  
+     |  __call__(self, *args, **kwds)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods defined here:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__call__'])
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class Container(__builtin__.object)
+     |  Methods defined here:
+     |  
+     |  __contains__(self, x)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods defined here:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__contains__'])
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class Counter(__builtin__.dict)
+     |  Dict subclass for counting hashable items.  Sometimes called a bag
+     |  or multiset.  Elements are stored as dictionary keys and their counts
+     |  are stored as dictionary values.
+     |  
+     |  >>> c = Counter('abcdeabcdabcaba')  # count elements from a string
+     |  
+     |  >>> c.most_common(3)                # three most common elements
+     |  [('a', 5), ('b', 4), ('c', 3)]
+     |  >>> sorted(c)                       # list all unique elements
+     |  ['a', 'b', 'c', 'd', 'e']
+     |  >>> ''.join(sorted(c.elements()))   # list elements with repetitions
+     |  'aaaaabbbbcccdde'
+     |  >>> sum(c.values())                 # total of all counts
+     |  15
+     |  
+     |  >>> c['a']                          # count of letter 'a'
+     |  5
+     |  >>> for elem in 'shazam':           # update counts from an iterable
+     |  ...     c[elem] += 1                # by adding 1 to each element's count
+     |  >>> c['a']                          # now there are seven 'a'
+     |  7
+     |  >>> del c['b']                      # remove all 'b'
+     |  >>> c['b']                          # now there are zero 'b'
+     |  0
+     |  
+     |  >>> d = Counter('simsalabim')       # make another counter
+     |  >>> c.update(d)                     # add in the second counter
+     |  >>> c['a']                          # now there are nine 'a'
+     |  9
+     |  
+     |  >>> c.clear()                       # empty the counter
+     |  >>> c
+     |  Counter()
+     |  
+     |  Note:  If a count is set to zero or reduced to zero, it will remain
+     |  in the counter until the entry is deleted or the counter is cleared:
+     |  
+     |  >>> c = Counter('aaabbc')
+     |  >>> c['b'] -= 2                     # reduce the count of 'b' by two
+     |  >>> c.most_common()                 # 'b' is still in, but its count is zero
+     |  [('a', 3), ('c', 1), ('b', 0)]
+     |  
+     |  Method resolution order:
+     |      Counter
+     |      __builtin__.dict
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __add__(self, other)
+     |      Add counts from two counters.
+     |      
+     |      >>> Counter('abbb') + Counter('bcc')
+     |      Counter({'b': 4, 'c': 2, 'a': 1})
+     |  
+     |  __and__(self, other)
+     |      Intersection is the minimum of corresponding counts.
+     |      
+     |      >>> Counter('abbb') & Counter('bcc')
+     |      Counter({'b': 1})
+     |  
+     |  __delitem__(self, elem)
+     |      Like dict.__delitem__() but does not raise KeyError for missing values.
+     |  
+     |  __init__(*args, **kwds)
+     |      Create a new, empty Counter object.  And if given, count elements
+     |      from an input iterable.  Or, initialize the count from another mapping
+     |      of elements to their counts.
+     |      
+     |      >>> c = Counter()                           # a new, empty counter
+     |      >>> c = Counter('gallahad')                 # a new counter from an iterable
+     |      >>> c = Counter({'a': 4, 'b': 2})           # a new counter from a mapping
+     |      >>> c = Counter(a=4, b=2)                   # a new counter from keyword args
+     |  
+     |  __missing__(self, key)
+     |      The count of elements not in the Counter is zero.
+     |  
+     |  __or__(self, other)
+     |      Union is the maximum of value in either of the input counters.
+     |      
+     |      >>> Counter('abbb') | Counter('bcc')
+     |      Counter({'b': 3, 'c': 2, 'a': 1})
+     |  
+     |  __reduce__(self)
+     |  
+     |  __repr__(self)
+     |  
+     |  __sub__(self, other)
+     |      Subtract count, but keep only results with positive counts.
+     |      
+     |      >>> Counter('abbbc') - Counter('bccd')
+     |      Counter({'b': 2, 'a': 1})
+     |  
+     |  copy(self)
+     |      Return a shallow copy.
+     |  
+     |  elements(self)
+     |      Iterator over elements repeating each as many times as its count.
+     |      
+     |      >>> c = Counter('ABCABC')
+     |      >>> sorted(c.elements())
+     |      ['A', 'A', 'B', 'B', 'C', 'C']
+     |      
+     |      # Knuth's example for prime factors of 1836:  2**2 * 3**3 * 17**1
+     |      >>> prime_factors = Counter({2: 2, 3: 3, 17: 1})
+     |      >>> product = 1
+     |      >>> for factor in prime_factors.elements():     # loop over factors
+     |      ...     product *= factor                       # and multiply them
+     |      >>> product
+     |      1836
+     |      
+     |      Note, if an element's count has been set to zero or is a negative
+     |      number, elements() will ignore it.
+     |  
+     |  most_common(self, n=None)
+     |      List the n most common elements and their counts from the most
+     |      common to the least.  If n is None, then list all element counts.
+     |      
+     |      >>> Counter('abcdeabcdabcaba').most_common(3)
+     |      [('a', 5), ('b', 4), ('c', 3)]
+     |  
+     |  subtract(*args, **kwds)
+     |      Like dict.update() but subtracts counts instead of replacing them.
+     |      Counts can be reduced below zero.  Both the inputs and outputs are
+     |      allowed to contain zero and negative counts.
+     |      
+     |      Source can be an iterable, a dictionary, or another Counter instance.
+     |      
+     |      >>> c = Counter('which')
+     |      >>> c.subtract('witch')             # subtract elements from another iterable
+     |      >>> c.subtract(Counter('watch'))    # subtract elements from another counter
+     |      >>> c['h']                          # 2 in which, minus 1 in witch, minus 1 in watch
+     |      0
+     |      >>> c['w']                          # 1 in which, minus 1 in witch, minus 1 in watch
+     |      -1
+     |  
+     |  update(*args, **kwds)
+     |      Like dict.update() but add counts instead of replacing them.
+     |      
+     |      Source can be an iterable, a dictionary, or another Counter instance.
+     |      
+     |      >>> c = Counter('which')
+     |      >>> c.update('witch')           # add elements from another iterable
+     |      >>> d = Counter('watch')
+     |      >>> c.update(d)                 # add elements from another counter
+     |      >>> c['h']                      # four 'h' in which, witch, and watch
+     |      4
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods defined here:
+     |  
+     |  fromkeys(cls, iterable, v=None) from __builtin__.type
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from __builtin__.dict:
+     |  
+     |  __cmp__(...)
+     |      x.__cmp__(y) <==> cmp(x,y)
+     |  
+     |  __contains__(...)
+     |      D.__contains__(k) -> True if D has a key k, else False
+     |  
+     |  __eq__(...)
+     |      x.__eq__(y) <==> x==y
+     |  
+     |  __ge__(...)
+     |      x.__ge__(y) <==> x>=y
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __gt__(...)
+     |      x.__gt__(y) <==> x>y
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  __le__(...)
+     |      x.__le__(y) <==> x<=y
+     |  
+     |  __len__(...)
+     |      x.__len__() <==> len(x)
+     |  
+     |  __lt__(...)
+     |      x.__lt__(y) <==> x<y
+     |  
+     |  __ne__(...)
+     |      x.__ne__(y) <==> x!=y
+     |  
+     |  __setitem__(...)
+     |      x.__setitem__(i, y) <==> x[i]=y
+     |  
+     |  __sizeof__(...)
+     |      D.__sizeof__() -> size of D in memory, in bytes
+     |  
+     |  clear(...)
+     |      D.clear() -> None.  Remove all items from D.
+     |  
+     |  get(...)
+     |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+     |  
+     |  has_key(...)
+     |      D.has_key(k) -> True if D has a key k, else False
+     |  
+     |  items(...)
+     |      D.items() -> list of D's (key, value) pairs, as 2-tuples
+     |  
+     |  iteritems(...)
+     |      D.iteritems() -> an iterator over the (key, value) items of D
+     |  
+     |  iterkeys(...)
+     |      D.iterkeys() -> an iterator over the keys of D
+     |  
+     |  itervalues(...)
+     |      D.itervalues() -> an iterator over the values of D
+     |  
+     |  keys(...)
+     |      D.keys() -> list of D's keys
+     |  
+     |  pop(...)
+     |      D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
+     |      If key is not found, d is returned if given, otherwise KeyError is raised
+     |  
+     |  popitem(...)
+     |      D.popitem() -> (k, v), remove and return some (key, value) pair as a
+     |      2-tuple; but raise KeyError if D is empty.
+     |  
+     |  setdefault(...)
+     |      D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D
+     |  
+     |  values(...)
+     |      D.values() -> list of D's values
+     |  
+     |  viewitems(...)
+     |      D.viewitems() -> a set-like object providing a view on D's items
+     |  
+     |  viewkeys(...)
+     |      D.viewkeys() -> a set-like object providing a view on D's keys
+     |  
+     |  viewvalues(...)
+     |      D.viewvalues() -> an object providing a view on D's values
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from __builtin__.dict:
+     |  
+     |  __hash__ = None
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+    
+    class Hashable(__builtin__.object)
+     |  Methods defined here:
+     |  
+     |  __hash__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods defined here:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__hash__'])
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class ItemsView(MappingView, Set)
+     |  Method resolution order:
+     |      ItemsView
+     |      MappingView
+     |      Set
+     |      Sized
+     |      Iterable
+     |      Container
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __contains__(self, item)
+     |  
+     |  __iter__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset([])
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from MappingView:
+     |  
+     |  __init__(self, mapping)
+     |  
+     |  __len__(self)
+     |  
+     |  __repr__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Set:
+     |  
+     |  __and__(self, other)
+     |  
+     |  __eq__(self, other)
+     |  
+     |  __ge__(self, other)
+     |  
+     |  __gt__(self, other)
+     |  
+     |  __le__(self, other)
+     |  
+     |  __lt__(self, other)
+     |  
+     |  __ne__(self, other)
+     |  
+     |  __or__(self, other)
+     |  
+     |  __rand__ = __and__(self, other)
+     |  
+     |  __ror__ = __or__(self, other)
+     |  
+     |  __rsub__(self, other)
+     |  
+     |  __rxor__ = __xor__(self, other)
+     |  
+     |  __sub__(self, other)
+     |  
+     |  __xor__(self, other)
+     |  
+     |  isdisjoint(self, other)
+     |      Return True if two sets have a null intersection.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Set:
+     |  
+     |  __hash__ = None
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods inherited from Sized:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Sized:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Sized:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class Iterable(__builtin__.object)
+     |  Methods defined here:
+     |  
+     |  __iter__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods defined here:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__iter__'])
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class Iterator(Iterable)
+     |  Method resolution order:
+     |      Iterator
+     |      Iterable
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __iter__(self)
+     |  
+     |  next(self)
+     |      Return the next item from the iterator. When exhausted, raise StopIteration
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods defined here:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['next'])
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Iterable:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Iterable:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class KeysView(MappingView, Set)
+     |  Method resolution order:
+     |      KeysView
+     |      MappingView
+     |      Set
+     |      Sized
+     |      Iterable
+     |      Container
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __contains__(self, key)
+     |  
+     |  __iter__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset([])
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from MappingView:
+     |  
+     |  __init__(self, mapping)
+     |  
+     |  __len__(self)
+     |  
+     |  __repr__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Set:
+     |  
+     |  __and__(self, other)
+     |  
+     |  __eq__(self, other)
+     |  
+     |  __ge__(self, other)
+     |  
+     |  __gt__(self, other)
+     |  
+     |  __le__(self, other)
+     |  
+     |  __lt__(self, other)
+     |  
+     |  __ne__(self, other)
+     |  
+     |  __or__(self, other)
+     |  
+     |  __rand__ = __and__(self, other)
+     |  
+     |  __ror__ = __or__(self, other)
+     |  
+     |  __rsub__(self, other)
+     |  
+     |  __rxor__ = __xor__(self, other)
+     |  
+     |  __sub__(self, other)
+     |  
+     |  __xor__(self, other)
+     |  
+     |  isdisjoint(self, other)
+     |      Return True if two sets have a null intersection.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Set:
+     |  
+     |  __hash__ = None
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods inherited from Sized:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Sized:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Sized:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class Mapping(Sized, Iterable, Container)
+     |  A Mapping is a generic container for associating key/value
+     |  pairs.
+     |  
+     |  This class provides concrete generic implementations of all
+     |  methods except for __getitem__, __iter__, and __len__.
+     |  
+     |  Method resolution order:
+     |      Mapping
+     |      Sized
+     |      Iterable
+     |      Container
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __contains__(self, key)
+     |  
+     |  __eq__(self, other)
+     |  
+     |  __getitem__(self, key)
+     |  
+     |  __ne__(self, other)
+     |  
+     |  get(self, key, default=None)
+     |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+     |  
+     |  items(self)
+     |      D.items() -> list of D's (key, value) pairs, as 2-tuples
+     |  
+     |  iteritems(self)
+     |      D.iteritems() -> an iterator over the (key, value) items of D
+     |  
+     |  iterkeys(self)
+     |      D.iterkeys() -> an iterator over the keys of D
+     |  
+     |  itervalues(self)
+     |      D.itervalues() -> an iterator over the values of D
+     |  
+     |  keys(self)
+     |      D.keys() -> list of D's keys
+     |  
+     |  values(self)
+     |      D.values() -> list of D's values
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__getitem__', '__iter__', '__len__']...
+     |  
+     |  __hash__ = None
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Sized:
+     |  
+     |  __len__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods inherited from Sized:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Sized:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Sized:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Iterable:
+     |  
+     |  __iter__(self)
+    
+    class MappingView(Sized)
+     |  Method resolution order:
+     |      MappingView
+     |      Sized
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, mapping)
+     |  
+     |  __len__(self)
+     |  
+     |  __repr__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset([])
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods inherited from Sized:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Sized:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Sized:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class MutableMapping(Mapping)
+     |  A MutableMapping is a generic container for associating
+     |  key/value pairs.
+     |  
+     |  This class provides concrete generic implementations of all
+     |  methods except for __getitem__, __setitem__, __delitem__,
+     |  __iter__, and __len__.
+     |  
+     |  Method resolution order:
+     |      MutableMapping
+     |      Mapping
+     |      Sized
+     |      Iterable
+     |      Container
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __delitem__(self, key)
+     |  
+     |  __setitem__(self, key, value)
+     |  
+     |  clear(self)
+     |      D.clear() -> None.  Remove all items from D.
+     |  
+     |  pop(self, key, default=<object object>)
+     |      D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
+     |      If key is not found, d is returned if given, otherwise KeyError is raised.
+     |  
+     |  popitem(self)
+     |      D.popitem() -> (k, v), remove and return some (key, value) pair
+     |      as a 2-tuple; but raise KeyError if D is empty.
+     |  
+     |  setdefault(self, key, default=None)
+     |      D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D
+     |  
+     |  update(*args, **kwds)
+     |      D.update([E, ]**F) -> None.  Update D from mapping/iterable E and F.
+     |      If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
+     |      If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
+     |      In either case, this is followed by: for k, v in F.items(): D[k] = v
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__delitem__', '__getitem__', '__iter...
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Mapping:
+     |  
+     |  __contains__(self, key)
+     |  
+     |  __eq__(self, other)
+     |  
+     |  __getitem__(self, key)
+     |  
+     |  __ne__(self, other)
+     |  
+     |  get(self, key, default=None)
+     |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+     |  
+     |  items(self)
+     |      D.items() -> list of D's (key, value) pairs, as 2-tuples
+     |  
+     |  iteritems(self)
+     |      D.iteritems() -> an iterator over the (key, value) items of D
+     |  
+     |  iterkeys(self)
+     |      D.iterkeys() -> an iterator over the keys of D
+     |  
+     |  itervalues(self)
+     |      D.itervalues() -> an iterator over the values of D
+     |  
+     |  keys(self)
+     |      D.keys() -> list of D's keys
+     |  
+     |  values(self)
+     |      D.values() -> list of D's values
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Mapping:
+     |  
+     |  __hash__ = None
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Sized:
+     |  
+     |  __len__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods inherited from Sized:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Sized:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Sized:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Iterable:
+     |  
+     |  __iter__(self)
+    
+    class MutableSequence(Sequence)
+     |  All the operations on a read-only sequence.
+     |  
+     |  Concrete subclasses must provide __new__ or __init__,
+     |  __getitem__, __setitem__, __delitem__, __len__, and insert().
+     |  
+     |  Method resolution order:
+     |      MutableSequence
+     |      Sequence
+     |      Sized
+     |      Iterable
+     |      Container
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __delitem__(self, index)
+     |  
+     |  __iadd__(self, values)
+     |  
+     |  __setitem__(self, index, value)
+     |  
+     |  append(self, value)
+     |      S.append(object) -- append object to the end of the sequence
+     |  
+     |  extend(self, values)
+     |      S.extend(iterable) -- extend sequence by appending elements from the iterable
+     |  
+     |  insert(self, index, value)
+     |      S.insert(index, object) -- insert object before index
+     |  
+     |  pop(self, index=-1)
+     |      S.pop([index]) -> item -- remove and return item at index (default last).
+     |      Raise IndexError if list is empty or index is out of range.
+     |  
+     |  remove(self, value)
+     |      S.remove(value) -- remove first occurrence of value.
+     |      Raise ValueError if the value is not present.
+     |  
+     |  reverse(self)
+     |      S.reverse() -- reverse *IN PLACE*
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__delitem__', '__getitem__', '__len_...
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Sequence:
+     |  
+     |  __contains__(self, value)
+     |  
+     |  __getitem__(self, index)
+     |  
+     |  __iter__(self)
+     |  
+     |  __reversed__(self)
+     |  
+     |  count(self, value)
+     |      S.count(value) -> integer -- return number of occurrences of value
+     |  
+     |  index(self, value)
+     |      S.index(value) -> integer -- return first index of value.
+     |      Raises ValueError if the value is not present.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Sized:
+     |  
+     |  __len__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods inherited from Sized:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Sized:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Sized:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class MutableSet(Set)
+     |  A mutable set is a finite, iterable container.
+     |  
+     |  This class provides concrete generic implementations of all
+     |  methods except for __contains__, __iter__, __len__,
+     |  add(), and discard().
+     |  
+     |  To override the comparisons (presumably for speed, as the
+     |  semantics are fixed), all you have to do is redefine __le__ and
+     |  then the other operations will automatically follow suit.
+     |  
+     |  Method resolution order:
+     |      MutableSet
+     |      Set
+     |      Sized
+     |      Iterable
+     |      Container
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __iand__(self, it)
+     |  
+     |  __ior__(self, it)
+     |  
+     |  __isub__(self, it)
+     |  
+     |  __ixor__(self, it)
+     |  
+     |  add(self, value)
+     |      Add an element.
+     |  
+     |  clear(self)
+     |      This is slow (creates N new iterators!) but effective.
+     |  
+     |  discard(self, value)
+     |      Remove an element.  Do not raise an exception if absent.
+     |  
+     |  pop(self)
+     |      Return the popped value.  Raise KeyError if empty.
+     |  
+     |  remove(self, value)
+     |      Remove an element. If not a member, raise a KeyError.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__contains__', '__iter__', '__len__'...
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Set:
+     |  
+     |  __and__(self, other)
+     |  
+     |  __eq__(self, other)
+     |  
+     |  __ge__(self, other)
+     |  
+     |  __gt__(self, other)
+     |  
+     |  __le__(self, other)
+     |  
+     |  __lt__(self, other)
+     |  
+     |  __ne__(self, other)
+     |  
+     |  __or__(self, other)
+     |  
+     |  __rand__ = __and__(self, other)
+     |  
+     |  __ror__ = __or__(self, other)
+     |  
+     |  __rsub__(self, other)
+     |  
+     |  __rxor__ = __xor__(self, other)
+     |  
+     |  __sub__(self, other)
+     |  
+     |  __xor__(self, other)
+     |  
+     |  isdisjoint(self, other)
+     |      Return True if two sets have a null intersection.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Set:
+     |  
+     |  __hash__ = None
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Sized:
+     |  
+     |  __len__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods inherited from Sized:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Sized:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Sized:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Iterable:
+     |  
+     |  __iter__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Container:
+     |  
+     |  __contains__(self, x)
+    
+    class OrderedDict(__builtin__.dict)
+     |  Dictionary that remembers insertion order
+     |  
+     |  Method resolution order:
+     |      OrderedDict
+     |      __builtin__.dict
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __delitem__(self, key, dict_delitem=<slot wrapper '__delitem__' of 'dict' objects>)
+     |      od.__delitem__(y) <==> del od[y]
+     |  
+     |  __eq__(self, other)
+     |      od.__eq__(y) <==> od==y.  Comparison to another OD is order-sensitive
+     |      while comparison to a regular mapping is order-insensitive.
+     |  
+     |  __init__(*args, **kwds)
+     |      Initialize an ordered dictionary.  The signature is the same as
+     |      regular dictionaries, but keyword arguments are not recommended because
+     |      their insertion order is arbitrary.
+     |  
+     |  __iter__(self)
+     |      od.__iter__() <==> iter(od)
+     |  
+     |  __ne__(self, other)
+     |      od.__ne__(y) <==> od!=y
+     |  
+     |  __reduce__(self)
+     |      Return state information for pickling
+     |  
+     |  __repr__(self, _repr_running={})
+     |      od.__repr__() <==> repr(od)
+     |  
+     |  __reversed__(self)
+     |      od.__reversed__() <==> reversed(od)
+     |  
+     |  __setitem__(self, key, value, dict_setitem=<slot wrapper '__setitem__' of 'dict' objects>)
+     |      od.__setitem__(i, y) <==> od[i]=y
+     |  
+     |  clear(self)
+     |      od.clear() -> None.  Remove all items from od.
+     |  
+     |  copy(self)
+     |      od.copy() -> a shallow copy of od
+     |  
+     |  items(self)
+     |      od.items() -> list of (key, value) pairs in od
+     |  
+     |  iteritems(self)
+     |      od.iteritems -> an iterator over the (key, value) pairs in od
+     |  
+     |  iterkeys(self)
+     |      od.iterkeys() -> an iterator over the keys in od
+     |  
+     |  itervalues(self)
+     |      od.itervalues -> an iterator over the values in od
+     |  
+     |  keys(self)
+     |      od.keys() -> list of keys in od
+     |  
+     |  pop(self, key, default=<object object>)
+     |      od.pop(k[,d]) -> v, remove specified key and return the corresponding
+     |      value.  If key is not found, d is returned if given, otherwise KeyError
+     |      is raised.
+     |  
+     |  popitem(self, last=True)
+     |      od.popitem() -> (k, v), return and remove a (key, value) pair.
+     |      Pairs are returned in LIFO order if last is true or FIFO order if false.
+     |  
+     |  setdefault(self, key, default=None)
+     |      od.setdefault(k[,d]) -> od.get(k,d), also set od[k]=d if k not in od
+     |  
+     |  update(*args, **kwds)
+     |      D.update([E, ]**F) -> None.  Update D from mapping/iterable E and F.
+     |      If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
+     |      If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
+     |      In either case, this is followed by: for k, v in F.items(): D[k] = v
+     |  
+     |  values(self)
+     |      od.values() -> list of values in od
+     |  
+     |  viewitems(self)
+     |      od.viewitems() -> a set-like object providing a view on od's items
+     |  
+     |  viewkeys(self)
+     |      od.viewkeys() -> a set-like object providing a view on od's keys
+     |  
+     |  viewvalues(self)
+     |      od.viewvalues() -> an object providing a view on od's values
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods defined here:
+     |  
+     |  fromkeys(cls, iterable, value=None) from __builtin__.type
+     |      OD.fromkeys(S[, v]) -> New ordered dictionary with keys from S.
+     |      If not specified, the value defaults to None.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from __builtin__.dict:
+     |  
+     |  __cmp__(...)
+     |      x.__cmp__(y) <==> cmp(x,y)
+     |  
+     |  __contains__(...)
+     |      D.__contains__(k) -> True if D has a key k, else False
+     |  
+     |  __ge__(...)
+     |      x.__ge__(y) <==> x>=y
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __gt__(...)
+     |      x.__gt__(y) <==> x>y
+     |  
+     |  __le__(...)
+     |      x.__le__(y) <==> x<=y
+     |  
+     |  __len__(...)
+     |      x.__len__() <==> len(x)
+     |  
+     |  __lt__(...)
+     |      x.__lt__(y) <==> x<y
+     |  
+     |  __sizeof__(...)
+     |      D.__sizeof__() -> size of D in memory, in bytes
+     |  
+     |  get(...)
+     |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+     |  
+     |  has_key(...)
+     |      D.has_key(k) -> True if D has a key k, else False
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from __builtin__.dict:
+     |  
+     |  __hash__ = None
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+    
+    class Sequence(Sized, Iterable, Container)
+     |  All the operations on a read-only sequence.
+     |  
+     |  Concrete subclasses must override __new__ or __init__,
+     |  __getitem__, and __len__.
+     |  
+     |  Method resolution order:
+     |      Sequence
+     |      Sized
+     |      Iterable
+     |      Container
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __contains__(self, value)
+     |  
+     |  __getitem__(self, index)
+     |  
+     |  __iter__(self)
+     |  
+     |  __reversed__(self)
+     |  
+     |  count(self, value)
+     |      S.count(value) -> integer -- return number of occurrences of value
+     |  
+     |  index(self, value)
+     |      S.index(value) -> integer -- return first index of value.
+     |      Raises ValueError if the value is not present.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__getitem__', '__len__'])
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Sized:
+     |  
+     |  __len__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods inherited from Sized:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Sized:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Sized:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class Set(Sized, Iterable, Container)
+     |  A set is a finite, iterable container.
+     |  
+     |  This class provides concrete generic implementations of all
+     |  methods except for __contains__, __iter__ and __len__.
+     |  
+     |  To override the comparisons (presumably for speed, as the
+     |  semantics are fixed), redefine __le__ and __ge__,
+     |  then the other operations will automatically follow suit.
+     |  
+     |  Method resolution order:
+     |      Set
+     |      Sized
+     |      Iterable
+     |      Container
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __and__(self, other)
+     |  
+     |  __eq__(self, other)
+     |  
+     |  __ge__(self, other)
+     |  
+     |  __gt__(self, other)
+     |  
+     |  __le__(self, other)
+     |  
+     |  __lt__(self, other)
+     |  
+     |  __ne__(self, other)
+     |  
+     |  __or__(self, other)
+     |  
+     |  __rand__ = __and__(self, other)
+     |  
+     |  __ror__ = __or__(self, other)
+     |  
+     |  __rsub__(self, other)
+     |  
+     |  __rxor__ = __xor__(self, other)
+     |  
+     |  __sub__(self, other)
+     |  
+     |  __xor__(self, other)
+     |  
+     |  isdisjoint(self, other)
+     |      Return True if two sets have a null intersection.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__contains__', '__iter__', '__len__'...
+     |  
+     |  __hash__ = None
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Sized:
+     |  
+     |  __len__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods inherited from Sized:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Sized:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Sized:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Iterable:
+     |  
+     |  __iter__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from Container:
+     |  
+     |  __contains__(self, x)
+    
+    class Sized(__builtin__.object)
+     |  Methods defined here:
+     |  
+     |  __len__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods defined here:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset(['__len__'])
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class ValuesView(MappingView)
+     |  Method resolution order:
+     |      ValuesView
+     |      MappingView
+     |      Sized
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __contains__(self, value)
+     |  
+     |  __iter__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __abstractmethods__ = frozenset([])
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from MappingView:
+     |  
+     |  __init__(self, mapping)
+     |  
+     |  __len__(self)
+     |  
+     |  __repr__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Class methods inherited from Sized:
+     |  
+     |  __subclasshook__(cls, C) from abc.ABCMeta
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from Sized:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from Sized:
+     |  
+     |  __metaclass__ = <class 'abc.ABCMeta'>
+     |      Metaclass for defining Abstract Base Classes (ABCs).
+     |      
+     |      Use this metaclass to create an ABC.  An ABC can be subclassed
+     |      directly, and then acts as a mix-in class.  You can also register
+     |      unrelated concrete classes (even built-in classes) and unrelated
+     |      ABCs as 'virtual subclasses' -- these and their descendants will
+     |      be considered subclasses of the registering ABC by the built-in
+     |      issubclass() function, but the registering ABC won't show up in
+     |      their MRO (Method Resolution Order) nor will method
+     |      implementations defined by the registering ABC be callable (not
+     |      even via super()).
+    
+    class defaultdict(__builtin__.dict)
+     |  defaultdict(default_factory[, ...]) --> dict with default factory
+     |  
+     |  The default factory is called without arguments to produce
+     |  a new value when a key is not present, in __getitem__ only.
+     |  A defaultdict compares equal to a dict with the same items.
+     |  All remaining arguments are treated the same as if they were
+     |  passed to the dict constructor, including keyword arguments.
+     |  
+     |  Method resolution order:
+     |      defaultdict
+     |      __builtin__.dict
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __copy__(...)
+     |      D.copy() -> a shallow copy of D.
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  __missing__(...)
+     |      __missing__(key) # Called by __getitem__ for missing key; pseudo-code:
+     |      if self.default_factory is None: raise KeyError((key,))
+     |      self[key] = value = self.default_factory()
+     |      return value
+     |  
+     |  __reduce__(...)
+     |      Return state information for pickling.
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  copy(...)
+     |      D.copy() -> a shallow copy of D.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  default_factory
+     |      Factory for default value called by __missing__().
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from __builtin__.dict:
+     |  
+     |  __cmp__(...)
+     |      x.__cmp__(y) <==> cmp(x,y)
+     |  
+     |  __contains__(...)
+     |      D.__contains__(k) -> True if D has a key k, else False
+     |  
+     |  __delitem__(...)
+     |      x.__delitem__(y) <==> del x[y]
+     |  
+     |  __eq__(...)
+     |      x.__eq__(y) <==> x==y
+     |  
+     |  __ge__(...)
+     |      x.__ge__(y) <==> x>=y
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __gt__(...)
+     |      x.__gt__(y) <==> x>y
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  __le__(...)
+     |      x.__le__(y) <==> x<=y
+     |  
+     |  __len__(...)
+     |      x.__len__() <==> len(x)
+     |  
+     |  __lt__(...)
+     |      x.__lt__(y) <==> x<y
+     |  
+     |  __ne__(...)
+     |      x.__ne__(y) <==> x!=y
+     |  
+     |  __setitem__(...)
+     |      x.__setitem__(i, y) <==> x[i]=y
+     |  
+     |  __sizeof__(...)
+     |      D.__sizeof__() -> size of D in memory, in bytes
+     |  
+     |  clear(...)
+     |      D.clear() -> None.  Remove all items from D.
+     |  
+     |  fromkeys(...)
+     |      dict.fromkeys(S[,v]) -> New dict with keys from S and values equal to v.
+     |      v defaults to None.
+     |  
+     |  get(...)
+     |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+     |  
+     |  has_key(...)
+     |      D.has_key(k) -> True if D has a key k, else False
+     |  
+     |  items(...)
+     |      D.items() -> list of D's (key, value) pairs, as 2-tuples
+     |  
+     |  iteritems(...)
+     |      D.iteritems() -> an iterator over the (key, value) items of D
+     |  
+     |  iterkeys(...)
+     |      D.iterkeys() -> an iterator over the keys of D
+     |  
+     |  itervalues(...)
+     |      D.itervalues() -> an iterator over the values of D
+     |  
+     |  keys(...)
+     |      D.keys() -> list of D's keys
+     |  
+     |  pop(...)
+     |      D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
+     |      If key is not found, d is returned if given, otherwise KeyError is raised
+     |  
+     |  popitem(...)
+     |      D.popitem() -> (k, v), remove and return some (key, value) pair as a
+     |      2-tuple; but raise KeyError if D is empty.
+     |  
+     |  setdefault(...)
+     |      D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D
+     |  
+     |  update(...)
+     |      D.update([E, ]**F) -> None.  Update D from dict/iterable E and F.
+     |      If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
+     |      If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
+     |      In either case, this is followed by: for k in F: D[k] = F[k]
+     |  
+     |  values(...)
+     |      D.values() -> list of D's values
+     |  
+     |  viewitems(...)
+     |      D.viewitems() -> a set-like object providing a view on D's items
+     |  
+     |  viewkeys(...)
+     |      D.viewkeys() -> a set-like object providing a view on D's keys
+     |  
+     |  viewvalues(...)
+     |      D.viewvalues() -> an object providing a view on D's values
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from __builtin__.dict:
+     |  
+     |  __hash__ = None
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+    
+    class deque(__builtin__.object)
+     |  deque([iterable[, maxlen]]) --> deque object
+     |  
+     |  Build an ordered collection with optimized access from its endpoints.
+     |  
+     |  Methods defined here:
+     |  
+     |  __copy__(...)
+     |      Return a shallow copy of a deque.
+     |  
+     |  __delitem__(...)
+     |      x.__delitem__(y) <==> del x[y]
+     |  
+     |  __eq__(...)
+     |      x.__eq__(y) <==> x==y
+     |  
+     |  __ge__(...)
+     |      x.__ge__(y) <==> x>=y
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __gt__(...)
+     |      x.__gt__(y) <==> x>y
+     |  
+     |  __iadd__(...)
+     |      x.__iadd__(y) <==> x+=y
+     |  
+     |  __init__(...)
+     |      x.__init__(...) initializes x; see help(type(x)) for signature
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  __le__(...)
+     |      x.__le__(y) <==> x<=y
+     |  
+     |  __len__(...)
+     |      x.__len__() <==> len(x)
+     |  
+     |  __lt__(...)
+     |      x.__lt__(y) <==> x<y
+     |  
+     |  __ne__(...)
+     |      x.__ne__(y) <==> x!=y
+     |  
+     |  __reduce__(...)
+     |      Return state information for pickling.
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __reversed__(...)
+     |      D.__reversed__() -- return a reverse iterator over the deque
+     |  
+     |  __setitem__(...)
+     |      x.__setitem__(i, y) <==> x[i]=y
+     |  
+     |  __sizeof__(...)
+     |      D.__sizeof__() -- size of D in memory, in bytes
+     |  
+     |  append(...)
+     |      Add an element to the right side of the deque.
+     |  
+     |  appendleft(...)
+     |      Add an element to the left side of the deque.
+     |  
+     |  clear(...)
+     |      Remove all elements from the deque.
+     |  
+     |  count(...)
+     |      D.count(value) -> integer -- return number of occurrences of value
+     |  
+     |  extend(...)
+     |      Extend the right side of the deque with elements from the iterable
+     |  
+     |  extendleft(...)
+     |      Extend the left side of the deque with elements from the iterable
+     |  
+     |  pop(...)
+     |      Remove and return the rightmost element.
+     |  
+     |  popleft(...)
+     |      Remove and return the leftmost element.
+     |  
+     |  remove(...)
+     |      D.remove(value) -- remove first occurrence of value.
+     |  
+     |  reverse(...)
+     |      D.reverse() -- reverse *IN PLACE*
+     |  
+     |  rotate(...)
+     |      Rotate the deque n steps to the right (default n=1).  If n is negative, rotates left.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  maxlen
+     |      maximum size of a deque or None if unbounded
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  __hash__ = None
+     |  
+     |  __new__ = <built-in method __new__ of type object>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+
+FUNCTIONS
+    namedtuple(typename, field_names, verbose=False, rename=False)
+        Returns a new subclass of tuple with named fields.
+        
+        >>> Point = namedtuple('Point', ['x', 'y'])
+        >>> Point.__doc__                   # docstring for the new class
+        'Point(x, y)'
+        >>> p = Point(11, y=22)             # instantiate with positional args or keywords
+        >>> p[0] + p[1]                     # indexable like a plain tuple
+        33
+        >>> x, y = p                        # unpack like a regular tuple
+        >>> x, y
+        (11, 22)
+        >>> p.x + p.y                       # fields also accessible by name
+        33
+        >>> d = p._asdict()                 # convert to a dictionary
+        >>> d['x']
+        11
+        >>> Point(**d)                      # convert from a dictionary
+        Point(x=11, y=22)
+        >>> p._replace(x=100)               # _replace() is like str.replace() but targets named fields
+        Point(x=100, y=22)
